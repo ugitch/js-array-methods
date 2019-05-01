@@ -1,0 +1,139 @@
+<script src="../simpletest.js"></script>
+<script>
+
+// Function signature
+  // find(array, callback[, optionalThis])
+
+// callback parameters:
+  // currentValue
+  // currentIndex
+  // array
+
+// Return value
+  // Returns first value where callback returns true or undefined.
+
+// Description:
+    // It should pass in the i-th element as the first argument to the callback.
+    // It should pass in the i-th position as the second argument to the callback.
+    // It should pass in the original array as the third argument to the callback.
+    // It should accept an optional this object.
+
+    // If callback true, it should return currentValue.
+    // If callback true, it should run the callback indexWhenTrue + 1 times. 
+
+    // If no callback true, it should return undefined.    
+    // If no callback true, it should run the callback array.length times.
+
+    // Maximum callback executions equals array.length times.
+    // If an unvisited element is changed by callback, its new value will be used.
+    // It should not modify the array.
+   
+function find(array, callback, optionalThis) {
+  var findCallback = callback;
+  var length = array.length;
+
+  if (optionalThis) {
+    findCallback = callback.bind(optionalThis);
+  }
+
+  for (var i = 0; i < length; i++) {
+    if (findCallback(array[i], i, array)) {
+      return array[i];
+    }
+  }
+
+  return undefined;
+}
+
+tests({
+  'It should pass in the i-th element as the first argument to the callback.': function() {
+    find([1], function(currentValue) {
+      eq(currentValue, 1);
+    });
+  },
+  'It should pass in the i-th position as the second argument to the callback.': function() {
+    var testArray = [1, 2, 3];
+    find(testArray, function(currentValue, currentIndex) {
+      eq(testArray[currentIndex], currentValue);
+    });
+  },
+  'It should pass in the original array as the third argument to the callback.': function() {
+    var testArray = [1, 2, 3];
+    find(testArray, function(currentValue, currentIndex, array) {
+      eq(testArray, array);
+    });
+  },
+  'It should accept an optional this object.': function() {
+    var testArray = [1, 2, 3];
+    find(testArray, function() {
+      eq(this.description, 'I am accessible inside the callback.');
+    }, {description: 'I am accessible inside the callback.'});
+  },
+
+  'If callback true, it should return currentValue.': function() {
+    var findValue = find([1, 2], function(currentValue) {
+      return currentValue > 1;
+    });
+    eq(findValue, 2);
+  },
+  'If callback true, it should run the callback indexWhenTrue + 1 times.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    var indexWhenTrue = undefined;
+    var testArray = [1, 2, 3, 4, 5];
+    find(testArray, function(currentValue, currentIndex) {
+      numberOfTimesCallbackHasRun++;
+      if (currentValue === 2) {
+        indexWhenTrue = currentIndex;
+        return currentValue;
+      }
+    });
+    eq(numberOfTimesCallbackHasRun, indexWhenTrue + 1);
+  },
+
+  'If no callback true, it should return undefined.': function() {
+    var findValue = find([1, 2], function(currentValue) {
+      return currentValue > 2;
+    });
+    eq(findValue, undefined);
+  },
+  'If no callback true, it should run the callback array.length times.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    find([1, 2,, 4, 5], function(currentValue) {
+      numberOfTimesCallbackHasRun++;
+      return currentValue === 3;
+    });
+    eq(numberOfTimesCallbackHasRun, 5);
+  },
+
+  'Maximum callback executions equals array.length times.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    find([1, 2,, 4, 5], function(currentValue, currentIndex, array) {
+      numberOfTimesCallbackHasRun++;
+      array.push(currentIndex);
+      return currentValue === 3;
+    });
+    eq(numberOfTimesCallbackHasRun, 5);
+  },
+  'If an unvisited element is changed by callback, its new value will be used.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    var result = find([1, 2,, 4], function(currentValue, currentIndex, array) {
+      numberOfTimesCallbackHasRun++;
+      if (currentIndex === 0) {
+        array[3] = 3;
+      }
+      array.push(currentIndex);
+      return currentValue === 3;
+    });
+    eq(result, 3);
+    eq(numberOfTimesCallbackHasRun, 4);
+  },
+  'It should not modify the array.': function() {
+    var testArray = [1, 2, 3];
+    find(testArray, function() {});
+    eq(testArray[0], 1);
+    eq(testArray[1], 2);
+    eq(testArray[2], 3);
+  }
+});
+
+</script>
