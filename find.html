@@ -37,13 +37,9 @@ function find(array, callback, optionalThis) {
   if (typeof callback !== 'function') {
     throw new TypeError(`${callback} is not a function`);
   }
-  
-  var findCallback = callback;
-  var length = array.length;
 
-  if (optionalThis) {
-    findCallback = callback.bind(optionalThis);
-  }
+  var length = array.length;
+  var findCallback = optionalThis ? callback.bind(optionalThis) : callback;
 
   for (var i = 0; i < length; i++) {
     if (findCallback(array[i], i, array)) {
