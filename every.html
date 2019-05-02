@@ -39,10 +39,10 @@
 
 function every(array, callback, optionalThis) {
   var length = array.length;
-  var everyCallback = optionalThis ? callback.bind(optionalThis) : callback;
+  callback = optionalThis ? callback.bind(optionalThis) : callback;
 
   for (var i = 0; i < length; i++) {
-    if (i in array && !everyCallback(array[i], i, array)) {
+    if (i in array && !callback(array[i], i, array)) {
       return false;
     }
   }
