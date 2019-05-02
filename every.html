@@ -30,13 +30,19 @@
   // If no callback is false, it should run the callback array.length times.
   // It should exclude holes.
 
-function every(array, callback, optionalThis) {
-  var length = array.length;
-  var everyCallback = callback;
+    // It should not mutate the array.
+    // If second argument is not a callback, throw a TypeError.
+    // Maximum callback executions equals array.length times.
+    // If an unvisited element is changed by callback, its new value will be used.
+    // If an unvisited element is deleted by callback, callback is not executed.
 
-  if (optionalThis) {
-    everyCallback = callback.bind(optionalThis);
+function every(array, callback, optionalThis) {
+  if (typeof callback !== 'function') {
+    throw new TypeError(`${callback} is not a function`);
   }
+
+  var length = array.length;
+  var everyCallback = optionalThis ? callback.bind(optionalThis) : callback;
 
   for (var i = 0; i < length; i++) {
     if (i in array && !everyCallback(array[i], i, array)) {
