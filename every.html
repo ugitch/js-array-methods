@@ -1,0 +1,134 @@
+<script src="../simpletest.js"></script>
+<script>
+
+// Function signature
+  // every(array, callback[, optionalThis])
+
+// callback parameters:
+  // currentValue
+  // currentIndex
+  // array
+
+// Return value
+  // boolean.
+    // true, all elements in the array pass the callback test.
+    // false, otherwise.
+    // true for empty array.
+
+// Requirements:
+  // It should pass in the i-th element as the first argument to the callback.
+  // It should pass in the i-th position as the second argument to the callback.
+  // It should pass in the original array as the third argument to the callback.
+  // It should accept an optionalThis object.
+
+  // It should return a boolean value.
+  // If callback is false, it should return false.
+  // If no callback is false, it should return true.
+  // If empty array, it should return true.
+ 
+  // If callback is false, it should run the callback indexWhenFalse + 1 times.
+  // If no callback is false, it should run the callback array.length times.
+  // It should exclude holes.
+
+function every(array, callback, optionalThis) {
+  var length = array.length;
+  var everyCallback = callback;
+
+  if (optionalThis) {
+    everyCallback = callback.bind(optionalThis);
+  }
+
+  for (var i = 0; i < length; i++) {
+    if (i in array && !everyCallback(array[i], i, array)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+tests({
+  'It should pass in the i-th element as the first argument to the callback.': function() {
+    every([1], function(currentValue) {
+      eq(currentValue, 1);
+    });
+  },
+  'It should pass in the i-th position as the second argument to the callback.': function() {
+    var testArray = [1, 2, 3];
+    every(testArray, function(currentValue, currentIndex) {
+      eq(testArray[currentIndex], currentValue);
+    });
+  },
+  'It should pass in the original array as the third argument to the callback.': function() {
+    var testArray = [1, 2, 3];
+    every(testArray, function(currentValue, currentIndex, array) {
+      eq(testArray, array);
+    });
+  },
+  'It should accept an optionalThis object.': function() {
+    var testArray = [1, 2, 3];
+    every(testArray, function() {
+      eq(this.description, 'I should be accessible inside the callback.');
+    }, {description: 'I should be accessible inside the callback.'});
+  },
+
+  'It should return a boolean value': function() {
+    var result = every([1, 2], function() { 
+      return true;
+    });
+    eq(result, true);
+  },
+  'If callback is false, it should return false.': function() {
+    var result = every([1, 2, 7], function(currentValue) { 
+      return currentValue < 6;
+    });
+    eq(result, false);
+  },
+  'If no callback is false, it should return true.': function() {
+    var result = every([1, 2, 5], function(currentValue) { 
+      return currentValue < 6;
+    });
+    eq(result, true);
+  },
+  'If empty array, it should return true.': function() {
+    var result = every([], function(currentValue) { 
+      return currentValue < 6;
+    });
+    eq(result, true);
+  },
+  
+  'If callback is false, it should run the callback indexWhenFalse + 1 times.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    var testArray = [1, 2, 3];
+    var indexWhenFalse = undefined;
+    every(testArray, function(currentValue, currentIndex) {
+      numberOfTimesCallbackHasRun++;
+      if (currentValue >= 2) {
+        indexWhenFalse = currentIndex;
+        return false;
+      } 
+      else {
+        return true;
+      }
+    });
+    eq(numberOfTimesCallbackHasRun, indexWhenFalse + 1);
+  },
+  'If no callback is false, it should run the callback array.length times.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    every([1, 2], function() {
+      numberOfTimesCallbackHasRun++;
+      return true;
+    });
+    eq(numberOfTimesCallbackHasRun, 2);
+  },
+  'It should exclude holes.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    every([1,, 2], function() {
+      numberOfTimesCallbackHasRun++;
+      return true;
+    });
+    eq(numberOfTimesCallbackHasRun, 2);
+  }
+});
+
+</script>
