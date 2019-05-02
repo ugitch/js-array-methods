@@ -6,4 +6,6 @@ Though being aware of ternary operator and using it, thanks @joooda for the conv
 
 Thanks @janelledement for reminding me I don't need an extra variable for callback binding.
 
+Thanks @kyleknaggs for reminding me to test whether callback is run at all.
+
 I hope others will learn something from my code as I did from code of others ;)

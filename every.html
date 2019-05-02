@@ -16,6 +16,7 @@
     // true for empty array.
 
 // Requirements:
+  // It should run the callback.
   // It should pass in the i-th element as the first argument to the callback.
   // It should pass in the i-th position as the second argument to the callback.
   // It should pass in the original array as the third argument to the callback.
@@ -25,8 +26,8 @@
   // If no callback is false, it should return true.
   // If empty array, it should return true.
 
-  // If callback is false, it should run the callback indexWhenFalse + 1 times.
-  // If no callback is false, it should run the callback array.length times.
+  // If no callback is false and no holes in array, it should run the callback array.length times.
+  // If callback is false and no holes in array, it should run the callback indexWhenFalse + 1 times.
   // Callback should skip holes in the array.
 
   // Maximum callback executions equals array.length times.
@@ -51,6 +52,13 @@ function every(array, callback, optionalThis) {
 }
 
 tests({
+  'It should run the callback.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    every([1], function() {
+      numberOfTimesCallbackHasRun++;
+    });
+    eq(numberOfTimesCallbackHasRun, 1);
+  },
   'It should pass in the i-th element as the first argument to the callback.': function() {
     every([1], function(currentValue) {
       eq(currentValue, 1);
@@ -71,8 +79,8 @@ tests({
   'It should accept an optionalThis object.': function() {
     var testArray = [1, 2, 3];
     every(testArray, function() {
-      eq(this.description, 'I should be accessible inside the callback.');
-    }, {description: 'I should be accessible inside the callback.'});
+      eq(this.description, 'I am accessible inside the callback.');
+    }, {description: 'I am accessible inside the callback.'});
   },
 
   'If callback is false, it should return false.': function() {
@@ -94,7 +102,15 @@ tests({
     eq(result, true);
   },
 
-  'If callback is false, it should run the callback indexWhenFalse + 1 times.': function() {
+  'If no callback is false and no holes in array, it should run the callback array.length times.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    every([1, 2], function() {
+      numberOfTimesCallbackHasRun++;
+      return true;
+    });
+    eq(numberOfTimesCallbackHasRun, 2);
+  },
+  'If callback is false and no holes in array, it should run the callback indexWhenFalse + 1 times.': function() {
     var numberOfTimesCallbackHasRun = 0;
     var testArray = [1, 2, 3];
     var indexWhenFalse = undefined;
@@ -110,21 +126,13 @@ tests({
     });
     eq(numberOfTimesCallbackHasRun, indexWhenFalse + 1);
   },
-  'If no callback is false, it should run the callback array.length times.': function() {
-    var numberOfTimesCallbackHasRun = 0;
-    every([1, 2], function() {
-      numberOfTimesCallbackHasRun++;
-      return true;
-    });
-    eq(numberOfTimesCallbackHasRun, 2);
-  },
   'Callback should skip holes in the array.': function() {
     var numberOfTimesCallbackHasRun = 0;
-    every([1,, 2], function() {
+    every([1,,], function() {
       numberOfTimesCallbackHasRun++;
       return true;
     });
-    eq(numberOfTimesCallbackHasRun, 2);
+    eq(numberOfTimesCallbackHasRun, 1);
   },
 
   'Maximum callback executions equals array.length times.': function() {
@@ -137,13 +145,16 @@ tests({
     eq(numberOfTimesCallbackHasRun, 2);
   },
   'If an unvisited element is changed by callback, its new value will be used.': function() {
+    var numberOfTimesCallbackHasRun = 0;
     var result = every([1, 2,, 4], function(currentValue, currentIndex, array) {
+      numberOfTimesCallbackHasRun++;
       if (currentIndex === 0) {
         array[2] = 3;
       }
       return currentValue !== 3;
     });
     eq(result, false);
+    eq(numberOfTimesCallbackHasRun, 3);
   },
   'If an unvisited element is deleted by callback, callback is not executed.': function() {
     var numberOfTimesCallbackHasRun = 0;
@@ -155,23 +166,23 @@ tests({
       return currentValue !== 3;
     });
     eq(numberOfTimesCallbackHasRun, 3);
+    eq(result, true);
   },
 
   'If second argument is not a callback, throw a TypeError.': function() {
     var isTypeError = false;
     try {
-      every([0, 1, 2], 'b');
+      every([0, 1], 'b');
     } catch (e) {
       isTypeError = e instanceof TypeError;
     }
     eq(isTypeError, true);
   },
   'It should not modify the array.': function() {
-    var testArray = [1, 2, 3];
+    var testArray = [1, 2];
     every(testArray, function() {});
     eq(testArray[0], 1);
     eq(testArray[1], 2);
-    eq(testArray[2], 3);
   }
 });
 

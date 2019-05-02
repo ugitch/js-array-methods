@@ -15,23 +15,24 @@
   // returns undefined.
 
 // Description:
-    // It should pass in the i-th element as the first argument to the callback.
-    // It should pass in the i-th position as the second argument to the callback.
-    // It should pass in the original array as the third argument to the callback.
-    // It should accept an optional this object.
+  // It should run the callback.
+  // It should pass in the i-th element as the first argument to the callback.
+  // It should pass in the i-th position as the second argument to the callback.
+  // It should pass in the original array as the third argument to the callback.
+  // It should accept an optional this object.
 
-    // If callback is true, it should return currentValue.
-    // If callback is true, it should run the callback indexWhenTrue + 1 times. 
-    // If no callback is true, it should return undefined.    
-    // If no callback is true, it should run the callback array.length times.
+  // If callback is true, it should return currentValue.
+  // If callback is true, it should run the callback indexWhenTrue + 1 times. 
+  // If no callback is true, it should return undefined.    
+  // If no callback is true, it should run the callback array.length times.
 
-    // Maximum callback executions equals array.length times.
-    // If an unvisited element is changed by callback, its new value will be used.
-    // If an unvisited element is deleted by callback, callback is still executed.
+  // Maximum callback executions equals array.length times.
+  // If an unvisited element is changed by callback, its new value will be used.
+  // If an unvisited element is deleted by callback, callback is still executed.
 
-    // If second argument is not a callback, throw a TypeError.
-    // It should not modify the array.
-   
+  // If second argument is not a callback, throw a TypeError.
+  // It should not modify the array.
+ 
 function find(array, callback, optionalThis) {
   var length = array.length;
   callback = optionalThis ? callback.bind(optionalThis) : callback;
@@ -44,6 +45,13 @@ function find(array, callback, optionalThis) {
 }
 
 tests({
+  'It should run the callback.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    find([1], function() {
+      numberOfTimesCallbackHasRun++;
+    });
+    eq(numberOfTimesCallbackHasRun, 1);
+  },
   'It should pass in the i-th element as the first argument to the callback.': function() {
     find([1], function(currentValue) {
       eq(currentValue, 1);

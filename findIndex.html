@@ -15,22 +15,23 @@
   // returns -1.
 
 // Description:
-    // It should pass in the i-th element as the first argument to the callback.
-    // It should pass in the i-th position as the second argument to the callback.
-    // It should pass in the original array as the third argument to the callback.
-    // It should accept an optionalThis object.
+  // It should run the callback.
+  // It should pass in the i-th element as the first argument to the callback.
+  // It should pass in the i-th position as the second argument to the callback.
+  // It should pass in the original array as the third argument to the callback.
+  // It should accept an optionalThis object.
 
-    // If callback is true, it should return currentIndex.
-    // If callback is true, it should run the callback indexWhenTrue + 1 times.
-    // If no callback is true, it should return -1.
-    // If no callback is true, it should run the callback array.length times.
-    
-    // Maximum callback executions equals array.length times.
-    // If an unvisited element is changed by callback, its new value will be used.
-    // If an unvisited element is deleted by callback, callback is still executed.
+  // If callback is true, it should return currentIndex.
+  // If callback is true, it should run the callback indexWhenTrue + 1 times.
+  // If no callback is true, it should return -1.
+  // If no callback is true, it should run the callback array.length times.
+  
+  // Maximum callback executions equals array.length times.
+  // If an unvisited element is changed by callback, its new value will be used.
+  // If an unvisited element is deleted by callback, callback is still executed.
 
-    // If second argument is not a callback, throw a TypeError.
-    // It should not modify the array.
+  // If second argument is not a callback, throw a TypeError.
+  // It should not modify the array.
 
 function findIndex(array, callback, optionalThis) {
   var length = array.length;
@@ -46,6 +47,13 @@ function findIndex(array, callback, optionalThis) {
 }
 
 tests({
+  'It should run the callback.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    findIndex([1], function() {
+      numberOfTimesCallbackHasRun++;
+    });
+    eq(numberOfTimesCallbackHasRun, 1);
+  },
   'It should pass in the i-th element as the first argument to the callback.': function() {
     findIndex([1], function(currentValue) {
       eq(currentValue, 1);
@@ -66,8 +74,8 @@ tests({
   'It should accept an optionalThis object.': function() {
     var testArray = [1, 2, 3];
     findIndex(testArray, function() {
-      eq(this.description, 'I should be accessible inside the callback.');
-    }, {description: 'I should be accessible inside the callback.'});
+      eq(this.description, 'I am accessible inside the callback.');
+    }, {description: 'I am accessible inside the callback.'});
   },
 
   'If callback is true, it should return currentIndex.': function() {
@@ -144,11 +152,10 @@ tests({
     eq(isTypeError, true);
   },
   'It should not modify the array.': function() {
-    var testArray = [1, 2, 3];
+    var testArray = [1, 2];
     findIndex(testArray, function() {});
     eq(testArray[0], 1);
     eq(testArray[1], 2);
-    eq(testArray[2], 3);
   }
 });
 
