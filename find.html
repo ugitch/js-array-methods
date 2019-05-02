@@ -29,9 +29,15 @@
     // Maximum callback executions equals array.length times.
     // If an unvisited element is changed by callback, its new value will be used.
     // If an unvisited element is deleted by callback, callback is still executed.
+
+    // If second argument is not a callback, throw a TypeError.
     // It should not modify the array.
    
 function find(array, callback, optionalThis) {
+  if (typeof callback !== 'function') {
+    throw new TypeError(`${callback} is not a function`);
+  }
+  
   var findCallback = callback;
   var length = array.length;
 
@@ -116,17 +122,13 @@ tests({
     eq(numberOfTimesCallbackHasRun, 5);
   },
   'If an unvisited element is changed by callback, its new value will be used.': function() {
-    var numberOfTimesCallbackHasRun = 0;
     var result = find([1, 2,, 4], function(currentValue, currentIndex, array) {
-      numberOfTimesCallbackHasRun++;
       if (currentIndex === 0) {
         array[2] = 3;
       }
-      array.push(currentIndex);
       return currentValue === 3;
     });
     eq(result, 3);
-    eq(numberOfTimesCallbackHasRun, 3);
   },
   'If an unvisited element is deleted by callback, callback is still executed.': function() {
     var numberOfTimesCallbackHasRun = 0;
@@ -135,11 +137,19 @@ tests({
       if (currentIndex === 0) {
         delete array[2];
       }
-      array.push(currentIndex);
       return currentValue === 3;
     });
-    eq(result, undefined);
     eq(numberOfTimesCallbackHasRun, 4);
+  },
+
+  'If second argument is not a callback, throw a TypeError.': function() {
+    var isTypeError = false;
+    try {
+      find([0, 1], 'b');
+    } catch (e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
   },
   'It should not modify the array.': function() {
     var testArray = [1, 2, 3];
