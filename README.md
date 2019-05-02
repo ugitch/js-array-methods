@@ -4,4 +4,4 @@ Thanks @chujunlu for inspiration, test for TypeErrror on find() and findIndex().
 
 Though being aware of ternary operator and using it, thanks @joooda for the convenient ternary inspiration in find() and findIndex().
 
-I hope others will learn from my code as I did.
+I hope others will learn from my code as I did from code of others ;)

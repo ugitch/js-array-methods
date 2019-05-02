@@ -33,10 +33,6 @@
     // It should not modify the array.
    
 function find(array, callback, optionalThis) {
-  if (typeof callback !== 'function') {
-    throw new TypeError(`${callback} is not a function`);
-  }
-
   var length = array.length;
   var findCallback = optionalThis ? callback.bind(optionalThis) : callback;
 
