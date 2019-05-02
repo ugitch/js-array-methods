@@ -1,0 +1,157 @@
+<script src="../simpletest.js"></script>
+<script>
+
+// Prototype
+  // function some(array, callback, optionalThis) {
+  //   var length = array.length;
+  //   var someCallback = callback;
+
+  //   if (optionalThis) {
+  //     someCallback = callback.bind(optionalThis);
+  //   }
+
+  //   for (var i = 0; i < length; i++) {}
+
+  //   return true;
+  // }
+
+// Function signature
+  // some(array, callback[, optionalThis])
+
+// callback parameters:
+  // currentValue
+  // currentIndex
+  // array
+
+// Return value
+  // boolean.
+    // true, if any element in the array pass the callback test.
+    // false, otherwise.
+    // false for empty array.
+
+// Requirements:
+  // It should pass in the i-th element as the first argument to the callback.
+  // It should pass in the i-th position as the second argument to the callback.
+  // It should pass in the original array as the third argument to the callback.
+  // It should accept an optionalThis object.
+
+  // It should return a boolean value.
+  // If callback is true, it should return true.
+  // If no callback is true, it should return false.
+  // If empty array, it should return false.
+  
+  // If no callback is true, it should run the callback array.length times.
+  // If callback is true, it should run the callback indexWhenTrue + 1 times.
+  // It should exclude holes.
+
+function some(array, callback, optionalThis) {
+    var length = array.length;
+    var someCallback = callback;
+
+    if (optionalThis) {
+      someCallback = callback.bind(optionalThis);
+    }
+
+    for (var i = 0; i < length; i++) {
+      if (i in array && someCallback(array[i], i, array)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+tests({
+  'It should run the callback.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    some([1, 2], function() {
+      numberOfTimesCallbackHasRun++;
+    });
+    eq(numberOfTimesCallbackHasRun, 2);
+  },
+
+  'It should pass in the i-th element as the first argument to the callback.': function() {
+    some([1], function(currentValue) {
+      eq(currentValue, 1);
+    });
+  },
+  'It should pass in the i-th position as the second argument to the callback.': function() {
+    var testArray = [1, 2, 3];
+    some(testArray, function(currentValue, currentIndex) {
+      eq(testArray[currentIndex], currentValue);
+    });
+  },
+  'It should pass in the original array as the third argument to the callback.': function() {
+    var testArray = [1, 2, 3];
+    some(testArray, function(currentValue, currentIndex, array) {
+      eq(testArray, array);
+    });
+  },
+  'It should accept an optionalThis object.': function() {
+    var testArray = [1, 2, 3];
+    some(testArray, function() {
+      eq(this.description, 'I should be accessible inside the callback.');
+    }, {description: 'I should be accessible inside the callback.'});
+  },
+
+  'It should return a boolean value.': function() {
+    var testArray = [1, 2, 3];
+    var result = some(testArray, function(currentValue, currentIndex, array) {
+      return true;
+    });
+    eq(result, true);
+  },
+  'If callback is true, it should return true.': function() {
+    var result = some([1, 2, 7], function(currentValue) { 
+      return currentValue < 6;
+    });
+    eq(result, true);
+  },
+  'If no callback is true, it should return false.': function() {
+    var result = some([1, 2, 3], function(currentValue) { 
+      return currentValue > 6;
+    });
+    eq(result, false);
+  },
+  'If empty array, it should return false.': function() {
+    var result = some([], function(currentValue) { 
+      return currentValue < 6;
+    });
+    eq(result, false);
+  },
+
+  'If no callback is true, it should run the callback array.length times.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    some([1, 2], function() {
+      numberOfTimesCallbackHasRun++;
+      return false;
+    });
+    eq(numberOfTimesCallbackHasRun, 2);
+  },
+  'If callback is true, it should run the callback indexWhenTrue + 1 times.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    var testArray = [1, 2, 3];
+    var indexWhenTrue = undefined;
+    some(testArray, function(currentValue, currentIndex) {
+      numberOfTimesCallbackHasRun++;
+      if (currentValue >= 2) {
+        indexWhenTrue = currentIndex;
+        return true;
+      } 
+      else {
+        return false;
+      }
+    });
+    eq(numberOfTimesCallbackHasRun, indexWhenTrue + 1);
+  },
+  'It should exclude holes.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    some([1,, 2], function() {
+      numberOfTimesCallbackHasRun++;
+      return false;
+    });
+    eq(numberOfTimesCallbackHasRun, 2);
+  }
+});
+
+</script>

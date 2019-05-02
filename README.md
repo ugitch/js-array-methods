@@ -4,4 +4,6 @@ Thanks @chujunlu for inspiration, test for TypeErrror on find() and findIndex().
 
 Though being aware of ternary operator and using it, thanks @joooda for the convenient ternary inspiration in find() and findIndex().
 
-I hope others will learn from my code as I did from code of others ;)
+Thanks @janelledement for reminding me I don't need an extra variable for callback binding.
+
+I hope others will learn something from my code as I did from code of others ;)
