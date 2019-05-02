@@ -8,4 +8,6 @@ Thanks @janelledement for reminding me I don't need an extra variable for callba
 
 Thanks @kyleknaggs for reminding me to test whether callback is run at all.
 
+@vincenttern, some interesting views, but very imprecise.
+
 I hope others will learn something from my code as I did from code of others ;)

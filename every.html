@@ -30,8 +30,8 @@
   // If callback is false and no holes in array, it should run the callback indexWhenFalse + 1 times.
   // Callback should skip holes in the array.
 
-  // Maximum callback executions equals array.length times.
-  // If an unvisited element is changed by callback, its new value will be used.
+  // It should limit number of callbacks prior to first callback run.
+  // If an unvisited element is changed by callback, callback is executed on actual new value.
   // If an unvisited element is deleted by callback, callback is not executed.
 
   // If second argument is not a callback, throw a TypeError.
@@ -135,7 +135,7 @@ tests({
     eq(numberOfTimesCallbackHasRun, 1);
   },
 
-  'Maximum callback executions equals array.length times.': function() {
+  'It should limit number of callbacks prior to first callback run.': function() {
     var numberOfTimesCallbackHasRun = 0;
     every([1, 2], function(currentValue, currentIndex, array) {
       numberOfTimesCallbackHasRun++;
@@ -144,7 +144,7 @@ tests({
     });
     eq(numberOfTimesCallbackHasRun, 2);
   },
-  'If an unvisited element is changed by callback, its new value will be used.': function() {
+  'If an unvisited element is changed by callback, callback is executed on actual new value.': function() {
     var numberOfTimesCallbackHasRun = 0;
     var result = every([1, 2,, 4], function(currentValue, currentIndex, array) {
       numberOfTimesCallbackHasRun++;

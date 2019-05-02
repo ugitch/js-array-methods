@@ -26,8 +26,8 @@
   // If no callback is true, it should return -1.
   // If no callback is true, it should run the callback array.length times.
   
-  // Maximum callback executions equals array.length times.
-  // If an unvisited element is changed by callback, its new value will be used.
+  // It should limit number of callbacks prior to first callback run.
+  // If an unvisited element is changed by callback, callback is executed on actual new value.
   // If an unvisited element is deleted by callback, callback is still executed.
 
   // If second argument is not a callback, throw a TypeError.
@@ -112,7 +112,7 @@ tests({
     eq(numberOfTimesCallbackHasRun, 4);
   },
 
-  'Maximum callback executions equals array.length times.': function() {
+  'It should limit number of callbacks prior to first callback run.': function() {
     var numberOfTimesCallbackHasRun = 0;
     findIndex([1, 2,, 4, 5], function(currentValue, currentIndex, array) {
       numberOfTimesCallbackHasRun++;
@@ -121,7 +121,7 @@ tests({
     });
     eq(numberOfTimesCallbackHasRun, 5);
   },
-  'If an unvisited element is changed by callback, its new value will be used.': function() {
+  'If an unvisited element is changed by callback, callback is executed on actual new value.': function() {
     var result = findIndex([1, 2,, 4], function(currentValue, currentIndex, array) {
       if (currentIndex === 0) {
         array[2] = 3;
