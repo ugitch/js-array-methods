@@ -38,11 +38,12 @@
   // If no initialValue and array has one element, it should return that element without calling callback.
 
   // It should actually reduce.
-  // Callback should skip holes in the array.
+  // If initialValue, callback should skip holes in the array.
+  // If no initialValue, callback should skip holes in the array.
   // If array is empty and no initialValue, throw TypeError.
   // It should pass in the array as fourth argument to the callback.
 
-  // It should work for an array-like object. bug with length property
+  // It should work for an array-like object.
 
 function reduceRight(array, callback, initialValue) {
   var accumulator = initialValue;
@@ -158,13 +159,23 @@ tests({
     }, 0);
     eq(sum, 6);
   },
-  'Callback should skip holes in the array.': function() {
+  'If initialValue, callback should skip holes in the array.': function() {
     var numberOfTimesCallbackHasRun = 0;
-    reduceRight([,1, ,2, 3,,], function(a, b) {
+    var result = reduceRight([,1, ,2, 3,,], function(a, b) {
       numberOfTimesCallbackHasRun++;
       return a + b;
-    }, 0);
+    }, 1);
+    eq(result, 7);
     eq(numberOfTimesCallbackHasRun, 3);
+  },
+  'If no initialValue, callback should skip holes in the array.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    var result = reduceRight([,1, ,2, 3,,], function(a, b) {
+      numberOfTimesCallbackHasRun++;
+      return a + b;
+    });
+    eq(result, 6);
+    eq(numberOfTimesCallbackHasRun, 2);
   },
   'If array is empty and no initialValue, throw TypeError.': function() {
     var isTypeError = false;
