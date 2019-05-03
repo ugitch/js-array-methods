@@ -42,11 +42,13 @@
   // If array is empty and no initialValue, throw TypeError.
   // It should pass in the array as fourth argument to the callback.
 
+  // It should work for an array-like object. bug with length property
+
 function reduceRight(array, callback, initialValue) {
   var accumulator = initialValue;
   var length = array.length;
   var arrayOfIndexes = Object.keys(array);
-  var startingIndex = arrayOfIndexes[arrayOfIndexes.length - 1];
+  var startingIndex = length - 1;
 
   // no initialValue
   if (arguments.length < 3) {
@@ -60,13 +62,19 @@ function reduceRight(array, callback, initialValue) {
       return array[onlyIndex];
     }
     else {
+      // skip holes at the end of the array
+      while (!(startingIndex in array) && startingIndex > 0) {
+        startingIndex--;
+      }
       accumulator = array[startingIndex];
       startingIndex--;
     }
   }
   // with initialValue
-  else if (arrayOfIndexes.length === 0) {
-    return accumulator;
+  else {
+    if (arrayOfIndexes.length === 0) {
+      return accumulator;
+    }
   }
 
   for (var i = startingIndex; i >= 0; i--) {
@@ -172,6 +180,14 @@ tests({
     reduceRight(testArray, function(accumulator, currentValue, currentIndex, array) {
       eq(testArray, array);
     });
+  },
+
+  'It should work for an array-like object.': function () {
+    var arrayLike = {0: 1, 1: 2, length: 2};
+    var reduceResult = reduceRight(arrayLike, function(accumulator, currentValue) {
+      return accumulator + currentValue;
+    }, 3);
+    eq(reduceResult, 6);
   }
 });
 
