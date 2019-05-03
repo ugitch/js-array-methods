@@ -27,32 +27,53 @@
 // Requirements:
   // It should return a new array.
   // If one argument, return copy of an array.
-  // If an optional argument is not an array, it should add it to the returnArray.
+  // If an optional argument is a primitive, it should add it to the returnArray.
   // If an optional argument is an array, it should add its elements to the returnArray.
 
   // It should work for multiple optional arguments.
   // It should work for mixture of optional arguments, arrays and not arrays.
-  
+  // Resulting array should have elements positioned in the order in which arguments appear.
+
+  // It should skip holes in the arrays.  
   // It should not modify array(s).
+  // It should accept empty arrays.
   // If an element is an object, it should copy its reference into the returnArray.
   // It should not recurse into nested array arguments.
 
 function concat(array) {
-  // return new array
-  var returnArray = array.slice();
+  var returnArray = [];
+  // add array elements
+  for (var k = 0; k < array.length; k++) {
+    // skip holes in the array
+    if (k in array) {
+      returnArray[k] = array[k];
+    }
+  }
+  // add empty elements at the end of array
+  returnArray.length = array.length;
 
-  // check if any optional arguments
+  // check if optional arguments
   if (arguments.length > 1) {
     // traverse optional arguments
     for (var i = 1; i < arguments.length; i++) {
-      // check if an array
+      // check if it's an array
       if (Array.isArray(arguments[i])) {
+        // variable needed for the operation of adding empty elements at the end of the array
+        var j;
+        var lengthBeforeCurrentArray = returnArray.length;
         var length = arguments[i].length;
-        for (var j = 0; j < length; j++) {
-          returnArray.push(arguments[i][j]);
+        for (j = 0; j < length; j++) {
+          if (j in arguments[i]) {
+            returnArray[lengthBeforeCurrentArray + j] = arguments[i][j];
+          }
+        }
+        // add empty elements at the end of array in order
+        // to preserve number of elements
+        if (!(j - 1 in arguments[i]) && arguments[i].length !== 0) {
+          returnArray.length++;
         }
       }
-      // add non-array argument to new array
+      // add primitives to the new array
       else {
         returnArray.push(arguments[i]);
       }
@@ -74,10 +95,11 @@ tests({
     eq(array[0], result[0]);
     eq(array.length, result.length);
   },
-  'If an optional argument is not an array, it should add it to the returnArray.': function() {    
-    var result = concat([1], true);
-    eq(result[1], true);
-    eq(result.length, 2);
+  'If an optional argument is a primitive, it should add it to the returnArray.': function() {    
+    var result = concat([1], 's', true);
+    eq(result[1], 's');
+    eq(result[2], true);
+    eq(result.length, 3);
   },
   'If an optional argument is an array, it should add its elements to the returnArray.': function() {
     var result = concat([1], [2, 3]);
@@ -93,19 +115,45 @@ tests({
     eq(result.length, 3);
   },
   'It should work for mixture of optional arguments, arrays and not arrays.': function() {
-    var result = concat([], [2], 3, [5]);
+    var result = concat([], [2], true, [5]);
     eq(result[0], 2);
-    eq(result[1], 3);
+    eq(result[1], true);
     eq(result[2], 5);
     eq(result.length, 3);
   },
+  'Resulting array should have elements positioned in the order in which arguments appear.': function() {
+    var result = concat([1], 2, [3, 5]);
+    eq(result[0], 1);
+    eq(result[1], 2);
+    eq(result[2], 3);
+    eq(result[3], 5);
+    eq(result.length, 4);
+  },
 
+  'It should skip holes in the arrays.': function() {
+    var result = concat([,1], [,3, ,5,,]);
+    eq(result[0], undefined);
+    eq(result[1], 1);
+    eq(result[2], undefined);
+    eq(result[3], 3);
+    eq(result[4], undefined);
+    eq(result[5], 5);
+    eq(result[6], undefined);
+    eq(result.length, 7);
+    console.log(result);
+  },
   'It should not modify array(s).': function() {
     var array = [1, 2];
     var result = concat([1], array);
     eq(array[0], 1);
     eq(array[1], 2);
     eq(array.length, 2);
+  },
+  'It should accept empty arrays.': function() {
+    var result = concat([], [1, 2], []);
+    eq(result[0], 1);
+    eq(result[1], 2);
+    eq(result.length, 2)
   },
   'If an element is an object, it should copy object reference into returnArray.': function() {
     var testArray = [1];
