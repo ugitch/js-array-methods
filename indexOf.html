@@ -11,7 +11,7 @@
 // }
 
 // Function signature
-  // indexOf(array, searchElement[, fromIndex])
+  // indexOf(array, searchElement[, fromIndex=0])
 
 // Function parameters
   // array
@@ -19,8 +19,8 @@
   // fromIndex - the index to start the search at.
 
 // Return value
-  //  index of searchElement.
-  //   or
+  // index of found element.
+  //  or
   // -1 if not found
 
 // Description
@@ -31,8 +31,8 @@
   // If searchElement in array, it should return the first index of searchElement.
   
   // If no fromIndex, fromIndex is set to 0.
-  // If fromIndex, it should start the search at fromIndex.
-  // If fromIndex >= array.length, immediately return -1.
+  // If 0 < fromIndex < array.length, it should start the search at fromIndex.
+  // If fromIndex >= array.length, return -1.
   // If fromIndex < 0, it should start the search at array.length + fromIndex.
 
   // It should compare searchElement to array elements using ===.
@@ -43,6 +43,8 @@
   // If no arguments, it should throw TypeError.
   // If first argument is not an array, return -1.
   // If second argument is not supplied, return -1.
+
+  // TODO: It should work for strings!
 
 function indexOf(array, searchElement, fromIndex=0) {
   // no arguments => throw TypeError
@@ -85,11 +87,11 @@ tests({
     var index = indexOf(['mire', 2, 1], 'mire');
     eq(index, 0);
   },
-  'If fromIndex, it should start the search at fromIndex.': function() {
+  'If 0 < fromIndex < array.length, it should start the search at fromIndex.': function() {
     var index = indexOf(['d', 2, 'd'], 'd', 1);
     eq(index, 2);
   },
-  'If fromIndex >= array.length, immediately return -1.': function() {
+  'If fromIndex >= array.length, return -1.': function() {
     var index = indexOf(['s', 'd', 1], 's', 2);
     eq(index, -1);
   },
