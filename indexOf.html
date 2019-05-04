@@ -19,13 +19,12 @@
   // fromIndex - the index to start the search at.
 
 // Return value
-  // integer value of the index of searchElement.
+  //  index of searchElement.
+  //   or
   // -1 if not found
 
 // Description
-  // Returns the first index of searchElement in the array.
-  //  or
-  // returns -1 if not found.
+  // indexOf() returns the first index at which a given element is found in the array.
 
 // Requirements:
   // If no searchElement in array, it should return -1.
@@ -50,7 +49,7 @@ function indexOf(array, searchElement, fromIndex=0) {
   if (arguments.length === 0) {
     throw new TypeError('indexOf called on null or undefined');
   }
-  // first argument check
+  // first argument should be array or array-like object
   if (!Array.isArray(array) && typeof array !== 'object') {
     return -1;
   } 
@@ -58,7 +57,7 @@ function indexOf(array, searchElement, fromIndex=0) {
   if (arguments.length < 2) {
     return -1;
   }
-  // set fromIndex using offset from the end of the array
+  // set fromIndex value using offset from the end of the array
   if (fromIndex < 0) {
     fromIndex += length;
   }
