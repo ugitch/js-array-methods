@@ -3,13 +3,10 @@
 
 // Prototype
 // function indexOf(array, searchElement, fromIndex=0) {
-//   var length = array.length;
-
 //   for (var i = fromIndex; i < length; i++) {
 // 	   if (array[i] === searchElement)
 // 		   return i;
 //   }
-
 //   return -1;
 // }
 
@@ -42,8 +39,26 @@
   // It should compare searchElement to array elements using ===.
   // It should accept empty array.
   // It should not modify the array.
+  // It should work for array-like objects.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is not an array, return -1.
+  // If second argument is not supplied, return -1.
 
 function indexOf(array, searchElement, fromIndex=0) {
+  // no arguments => throw TypeError
+  if (arguments.length === 0) {
+    throw new TypeError('indexOf called on null or undefined');
+  }
+  // first argument check
+  if (!Array.isArray(array) && typeof array !== 'object') {
+    return -1;
+  } 
+  // check if required arguments are missing
+  if (arguments.length < 2) {
+    return -1;
+  }
+  // set fromIndex using offset from the end of the array
   if (fromIndex < 0) {
     fromIndex += length;
   }
@@ -53,7 +68,7 @@ function indexOf(array, searchElement, fromIndex=0) {
       return i;
     }
   }
-  
+
   return -1;
 }
 
@@ -99,6 +114,28 @@ tests({
     eq(array[1], 'd');
     eq(array[2], 3);
     eq(array.length, 3);
+  },
+  'It should work for array-like objects.': function() {
+    var arrayLike = {0: 's', 1: 'd', length: 2};
+    var index = indexOf(arrayLike, 's');
+    eq(index, 0);
+  },
+
+  'If no arguments, it should throw TypeError.': function() {
+    try {
+      indexOf();
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is not an array, return -1.': function() {
+    var index = indexOf('s', 's');
+    eq(index, -1);
+  },
+  'If second argument is not supplied, return -1.': function() {
+    var index = indexOf(['s']);
+    eq(index, -1);
   }
 });
 
