@@ -41,18 +41,18 @@
   // It should work for array-like objects.
 
   // If no arguments, it should throw TypeError.
-  // If first argument is not an array, return -1.
+  // If first argument is not an array, object or string return -1.
   // If second argument is not supplied, return -1.
 
-  // TODO: It should work for strings!
+  // TODO: It should work for strings.
 
 function indexOf(array, searchElement, fromIndex=0) {
   // no arguments => throw TypeError
   if (arguments.length === 0) {
     throw new TypeError('indexOf called on null or undefined');
   }
-  // first argument should be array or array-like object
-  if (!Array.isArray(array) && typeof array !== 'object') {
+  // first argument should be array, array-like object or string
+  if (!Array.isArray(array) && typeof array !== 'object' && typeof array !== 'string') {
     return -1;
   } 
   // check if required arguments are missing
@@ -130,13 +130,17 @@ tests({
     }
     eq(isTypeError, true);
   },
-  'If first argument is not an array, return -1.': function() {
-    var index = indexOf('s', 's');
+  'If first argument is not an array, object or string return -1.': function() {
+    var index = indexOf(true, 's');
     eq(index, -1);
   },
   'If second argument is not supplied, return -1.': function() {
     var index = indexOf(['s']);
     eq(index, -1);
+  },
+  'It should work for strings.': function() {
+    var index = indexOf('sad', 's');
+    eq(index, 0);
   }
 });
 
