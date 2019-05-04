@@ -1,0 +1,105 @@
+<script src="../simpletest.js"></script>
+<script>
+
+// Prototype
+// function indexOf(array, searchElement, fromIndex=0) {
+//   var length = array.length;
+
+//   for (var i = fromIndex; i < length; i++) {
+// 	   if (array[i] === searchElement)
+// 		   return i;
+//   }
+
+//   return -1;
+// }
+
+// Function signature
+  // indexOf(array, searchElement[, fromIndex])
+
+// Function parameters
+  // array
+  // searchElement - element to search for in the array.
+  // fromIndex - the index to start the search at.
+
+// Return value
+  // integer value of the index of searchElement.
+  // -1 if not found
+
+// Description
+  // Returns the first index of searchElement in the array.
+  //  or
+  // returns -1 if not found.
+
+// Requirements:
+  // If no searchElement in array, it should return -1.
+  // If searchElement in array, it should return the first index of searchElement.
+  
+  // If no fromIndex, fromIndex is set to 0.
+  // If fromIndex, it should start the search at fromIndex.
+  // If fromIndex >= array.length, immediately return -1.
+  // If fromIndex < 0, it should start the search at array.length + fromIndex.
+
+  // It should compare searchElement to array elements using ===.
+  // It should accept empty array.
+  // It should not modify the array.
+
+function indexOf(array, searchElement, fromIndex=0) {
+  if (fromIndex < 0) {
+    fromIndex += length;
+  }
+
+  for (var i = fromIndex; i < array.length; i++) {
+    if (array[i] === searchElement) {
+      return i;
+    }
+  }
+  
+  return -1;
+}
+
+tests({
+  'If no searchElement in array, it should return -1.': function() {
+    var index = indexOf([1, 2], 's');
+    eq(index, -1);
+  },
+  'If searchElement in array, it should return the first index of searchElement.': function() {
+    var index = indexOf([1,,2, 2], 2);
+    eq(index, 2);
+  },
+
+  'If no fromIndex, fromIndex is set to 0.': function() {
+    var index = indexOf(['mire', 2, 1], 'mire');
+    eq(index, 0);
+  },
+  'If fromIndex, it should start the search at fromIndex.': function() {
+    var index = indexOf(['d', 2, 'd'], 'd', 1);
+    eq(index, 2);
+  },
+  'If fromIndex >= array.length, immediately return -1.': function() {
+    var index = indexOf(['s', 'd', 1], 's', 2);
+    eq(index, -1);
+  },
+  'If fromIndex < 0, it should start the search at array.length + fromIndex.': function() {
+    var index = indexOf(['s', 's', 1], 's', -3);
+    eq(index, 0);
+  },
+
+  'It should compare searchElement to array elements using ===.': function() {
+    var index = indexOf(['sass', undefined, 'mvc'], null);
+    eq(index, -1);
+  },
+  'It should accept empty array.': function() {
+    var index = indexOf([], 's', -3);
+    eq(index, -1);
+  },
+  'It should not modify the array.': function() {
+    var array = ['s', 'd', 3];
+    var index = indexOf(array, 's', 0);
+    eq(array[0], 's');
+    eq(array[1], 'd');
+    eq(array[2], 3);
+    eq(array.length, 3);
+  }
+});
+
+</script>
