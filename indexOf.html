@@ -36,7 +36,7 @@
   // If fromIndex < 0, it should start the search at array.length + fromIndex.
 
   // It should compare searchElement to an array element using ===.
-  // It should accept empty array.
+  // It should accept an empty array.
   // It should not modify the array.
   // It should work for array-like objects.
 
@@ -50,12 +50,8 @@ function indexOf(array, searchElement, fromIndex=0) {
   if (arguments.length === 0) {
     throw new TypeError('indexOf called on null or undefined');
   }
-  // first argument should be array, array-like object or string
-  if (!Array.isArray(array) && typeof array !== 'object' && typeof array !== 'string') {
-    return -1;
-  } 
   // check if required arguments are missing
-  if (arguments.length < 2) {
+  else if (arguments.length === 1) {
     return -1;
   }
   // set fromIndex value using offset from the end of the array
@@ -103,7 +99,7 @@ tests({
     var index = indexOf(['sass', undefined, 'mvc'], null);
     eq(index, -1);
   },
-  'It should accept empty array.': function() {
+  'It should accept an empty array.': function() {
     var index = indexOf([], 's', -3);
     eq(index, -1);
   },
@@ -122,6 +118,7 @@ tests({
   },
 
   'If no arguments, it should throw TypeError.': function() {
+    var isTypeError = false;
     try {
       indexOf();
     } catch(e) {
@@ -134,7 +131,7 @@ tests({
     eq(index, -1);
   },
   'If second argument is not supplied, return -1.': function() {
-    var index = indexOf(['s']);
+    var index = indexOf(['s', undefined]);
     eq(index, -1);
   },
   'It should work for strings.': function() {
