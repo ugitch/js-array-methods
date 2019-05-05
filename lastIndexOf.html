@@ -29,15 +29,14 @@
 // Requirements:
   // If no searchElement in array, it should return -1.
   // If searchElement in array, it should return the last index of searchElement.
-  // It should search an array backwards.
-  
+
   // If no fromIndex, fromIndex is set to array.length - 1.
-  // If 0 < fromIndex < array.length, it should start the search at fromIndex.
+  // If fromIndex > 0, it should start the search at fromIndex.
   // If fromIndex < 0, it should start the search at array.length + fromIndex.
   // If fromIndex < 0 and array.length + fromIndex < 0, return -1.
 
   // It should compare searchElement to an array element using ===.
-  // It should accept empty array.
+  // It should accept an empty array.
   // It should not modify the array.
   // It should work for array-like objects.
 
@@ -46,22 +45,95 @@
   // If second argument is not supplied, return -1.
   // It should work for strings.
 
-function lastIndexOf(array, searchElement) {}
+function lastIndexOf(array, searchElement, fromIndex=array.length-1) {
+  // check if required arguments are missing
+  if (arguments.length === 1) {
+    return -1;
+  }
+  // set fromIndex value using offset from the end of the array
+  if (fromIndex < 0) {
+    fromIndex += array.length;
+  }
+
+  for (var i = fromIndex; i >= 0; i--) {
+    if (array[i] === searchElement) {
+      return i;
+    }
+  }
+
+  return -1;
+}
 
 tests({
-  '': function() {
-    fail();
+  'If no searchElement in array, it should return -1.': function() {
+    var index = lastIndexOf([1, 2], 'f');
+    eq(index, -1);
   },
-  '': function() {
-    fail();
-  },
-  '': function() {
-    fail();
+  'If searchElement in array, it should return the last index of searchElement.': function() {
+    var index = lastIndexOf([1, 2, 1], 1);
+    eq(index, 2);
   },
 
-  '': function() {
-    fail();
+  'If no fromIndex, fromIndex is set to array.length - 1.': function() {
+    var index = lastIndexOf([2, 1, 'man'], 'man');
+    eq(index, 2);
   },
+  'If fromIndex > 0, it should start the search at fromIndex.': function() {
+    var index = lastIndexOf(['d', 2, 'd'], 'd', 1);
+    eq(index, 0);
+  },
+  'If fromIndex < 0, it should start the search at array.length + fromIndex.': function() {
+    var index = lastIndexOf(['d', 2, 'd'], 'd', -1);
+    eq(index, 2);
+  },
+  'If fromIndex < 0 and array.length + fromIndex < 0, return -1.': function() {
+    var index = lastIndexOf(['d', 2, 'd'], 'd', -4);
+    eq(index, -1);
+  },
+
+  'It should compare searchElement to an array element using ===.': function() {
+    var index = lastIndexOf(['sass', undefined], null);
+    eq(index, -1);
+  },
+  'It should accept an empty array.': function() {
+    var index = lastIndexOf([], 2);
+    eq(index, -1);
+  },
+  'It should not modify the array.': function() {
+    var array = ['s', 'd', 3];
+    var index = lastIndexOf(array, 's', 0);
+    eq(array[0], 's');
+    eq(array[1], 'd');
+    eq(array[2], 3);
+    eq(array.length, 3);
+  },
+  'It should work for array-like objects.': function() {
+    var arrayLike = {0: 's', 1: 'd', length: 2};
+    var index = lastIndexOf(arrayLike, 's');
+    eq(index, 0);
+  },
+
+  'If no arguments, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      lastIndexOf();
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is not an array, object or string, return -1.': function() {
+    var index = lastIndexOf(true, 's');
+    eq(index, -1);
+  },
+  'If second argument is not supplied, return -1.': function() {
+    var index = lastIndexOf(['s', undefined]);
+    eq(index, -1);
+  },
+  'It should work for strings.': function() {
+    var index = lastIndexOf('sads', 's');
+    eq(index, 3);
+  }
 });
 
 </script>
