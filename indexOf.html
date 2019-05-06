@@ -34,6 +34,7 @@
   // If 0 < fromIndex < array.length, it should start the search at fromIndex.
   // If fromIndex >= array.length, return -1.
   // If fromIndex < 0, it should start the search at array.length + fromIndex.
+  // If fromIndex < 0 and array.length + fromIndex < 0, fromIndex is set to 0.
 
   // It should compare searchElement to an array element using ===.
   // It should accept an empty array.
@@ -46,20 +47,25 @@
   // It should work for strings.
 
 function indexOf(array, searchElement, fromIndex=0) {
+  var length = array.length;
   // no arguments => throw TypeError
   if (arguments.length === 0) {
     throw new TypeError('indexOf called on null or undefined');
   }
-  // check if required arguments are missing
   else if (arguments.length === 1) {
     return -1;
   }
   // set fromIndex value using offset from the end of the array
   if (fromIndex < 0) {
-    fromIndex += length;
+    if (length + fromIndex < 0) {
+      fromIndex = 0;
+    }
+    else {
+      fromIndex += length;
+    }
   }
 
-  for (var i = fromIndex; i < array.length; i++) {
+  for (var i = fromIndex; i < length; i++) {
     if (array[i] === searchElement) {
       return i;
     }
@@ -93,6 +99,8 @@ tests({
   'If fromIndex < 0, it should start the search at array.length + fromIndex.': function() {
     var index = indexOf(['s', 's', 1], 's', -3);
     eq(index, 0);
+  },
+  'If fromIndex < 0 and array.length + fromIndex < 0, fromIndex is set to 0.': function() {
   },
 
   'It should compare searchElement to array elements using ===.': function() {
