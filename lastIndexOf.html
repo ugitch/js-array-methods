@@ -1,34 +1,34 @@
 <script src="../simpletest.js"></script>
 <script>
 
-// Prototype
-// function lastIndexOf(array, searchElement, fromIndex=array.length-1) {
+// Prototype implementation
+// function lastIndexOf(array, valueToFind, fromIndex=array.length-1) {
 //   for (var i = fromIndex; i >= 0; i--) {
-// 	   if (array[i] === searchElement)
+// 	   if (array[i] === valueToFind)
 // 		   return i;
 //   }
 //   return -1;
 // }
 
 // Function signature
-  // lastIndexOf(array, searchElement[, fromIndex=array.length-1])
+  // lastIndexOf(array, valueToFind[, fromIndex=array.length-1])
 
 // Function parameters
   // array
-  // searchElement - element to search for in the array.
+  // valueToFind - value to search for in the array.
   // fromIndex - the index to start the search at.
 
 // Return value
-  // index of found element
+  // index of valueToFind
   //  or
   // -1 if not found
 
 // Description
-  // lastIndexOf() returns the last index at which a given element is found in the array.
+  // lastIndexOf() returns the last index at which valueToFind is found in the array.
 
 // Requirements:
-  // If no searchElement in array, it should return -1.
-  // If searchElement in array, it should return the last index of searchElement.
+  // If no valueToFind in array, it should return -1.
+  // If valueToFind in array, it should return the last index of valueToFind.
 
   // If no fromIndex, fromIndex is set to array.length - 1.
   // If 0 < fromIndex < array.length, it should start the search at fromIndex.
@@ -36,7 +36,7 @@
   // If fromIndex < 0, it should start the search at array.length + fromIndex.
   // If fromIndex < 0 and array.length + fromIndex < 0, return -1.
 
-  // It should compare searchElement to an array element using ===.
+  // It should compare valueToFind with array elements using ===.
   // It should accept an empty array.
   // It should not modify the array.
   // It should work for array-like objects.
@@ -44,9 +44,9 @@
   // If no arguments, it should throw TypeError.
   // If first argument is not an array, object or string, return -1.
   // If second argument is not supplied, return -1.
-  // It should work for strings.
+  // It should work for strings. (currently works only for finding chars in strings, former needs separate logic inside of function)
 
-function lastIndexOf(array, searchElement, fromIndex=array.length-1) {
+function lastIndexOf(array, valueToFind, fromIndex=array.length-1) {
   var length = array.length;
   if (arguments.length === 1) {
     return -1;
@@ -60,7 +60,7 @@ function lastIndexOf(array, searchElement, fromIndex=array.length-1) {
   }
 
   for (var i = fromIndex; i >= 0; i--) {
-    if (array[i] === searchElement) {
+    if (array[i] === valueToFind) {
       return i;
     }
   }
@@ -69,11 +69,11 @@ function lastIndexOf(array, searchElement, fromIndex=array.length-1) {
 }
 
 tests({
-  'If no searchElement in array, it should return -1.': function() {
+  'If no valueToFind in array, it should return -1.': function() {
     var index = lastIndexOf([1, 2], 'f');
     eq(index, -1);
   },
-  'If searchElement in array, it should return the last index of searchElement.': function() {
+  'If valueToFind in array, it should return the last index of valueToFind.': function() {
     var index = lastIndexOf([1, 2, 1], 1);
     eq(index, 2);
   },
@@ -97,7 +97,7 @@ tests({
     eq(index, -1);
   },
 
-  'It should compare searchElement to an array element using ===.': function() {
+  'It should compare valueToFind with array elements using ===.': function() {
     var index = lastIndexOf(['sass', undefined], null);
     eq(index, -1);
   },

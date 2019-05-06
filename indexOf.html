@@ -1,34 +1,34 @@
 <script src="../simpletest.js"></script>
 <script>
 
-// Prototype
-// function indexOf(array, searchElement, fromIndex=0) {
+// Prototype implementation
+// function indexOf(array, valueToFind, fromIndex=0) {
 //   for (var i = fromIndex; i < length; i++) {
-// 	   if (array[i] === searchElement)
+// 	   if (array[i] === valueToFind)
 // 		   return i;
 //   }
 //   return -1;
 // }
 
 // Function signature
-  // indexOf(array, searchElement[, fromIndex=0])
+  // indexOf(array, valueToFind[, fromIndex=0])
 
 // Function parameters
   // array
-  // searchElement - element to search for in the array.
+  // valueToFind - value to search for in the array.
   // fromIndex - the index to start the search at.
 
 // Return value
-  // index of found element.
+  // index of valueToFind
   //  or
   // -1 if not found
 
 // Description
-  // indexOf() returns the first index at which a given element is found in the array.
+  // indexOf() returns the first index at which valueToFind is found in the array.
 
 // Requirements:
-  // If no searchElement in array, it should return -1.
-  // If searchElement in array, it should return the first index of searchElement.
+  // If no valueToFind in array, it should return -1.
+  // If valueToFind in array, it should return the first index of valueToFind.
   
   // If no fromIndex, fromIndex is set to 0.
   // If 0 < fromIndex < array.length, it should start the search at fromIndex.
@@ -36,7 +36,7 @@
   // If fromIndex < 0, it should start the search at array.length + fromIndex.
   // If fromIndex < 0 and array.length + fromIndex < 0, fromIndex is set to 0.
 
-  // It should compare searchElement to an array element using ===.
+  // It should compare valueToFind with array elements using ===.
   // It should accept an empty array.
   // It should not modify the array.
   // It should work for array-like objects.
@@ -44,9 +44,9 @@
   // If no arguments, it should throw TypeError.
   // If first argument is not an array, object or string, return -1.
   // If second argument is not supplied, return -1.
-  // It should work for strings.
+  // It should work for strings. (currently works only for finding chars in strings, former needs separate logic inside of function)
 
-function indexOf(array, searchElement, fromIndex=0) {
+function indexOf(array, valueToFind, fromIndex=0) {
   var length = array.length;
   // no arguments => throw TypeError
   if (arguments.length === 0) {
@@ -66,7 +66,7 @@ function indexOf(array, searchElement, fromIndex=0) {
   }
 
   for (var i = fromIndex; i < length; i++) {
-    if (array[i] === searchElement) {
+    if (array[i] === valueToFind) {
       return i;
     }
   }
@@ -75,11 +75,11 @@ function indexOf(array, searchElement, fromIndex=0) {
 }
 
 tests({
-  'If no searchElement in array, it should return -1.': function() {
+  'If no valueToFind in array, it should return -1.': function() {
     var index = indexOf([1, 2], 's');
     eq(index, -1);
   },
-  'If searchElement in array, it should return the first index of searchElement.': function() {
+  'If valueToFind in array, it should return the first index of valueToFind.': function() {
     var index = indexOf([1,,2, 2], 2);
     eq(index, 2);
   },
@@ -103,7 +103,7 @@ tests({
   'If fromIndex < 0 and array.length + fromIndex < 0, fromIndex is set to 0.': function() {
   },
 
-  'It should compare searchElement to array elements using ===.': function() {
+  'It should compare valueToFind with array elements using ===.': function() {
     var index = indexOf(['sass', undefined, 'mvc'], null);
     eq(index, -1);
   },
