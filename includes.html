@@ -1,0 +1,62 @@
+<script src="../simpletest.js"></script>
+<script>
+
+// Prototype implementation
+// function includes(array, valueToFind, fromIndex=0) {
+//   for (var i = fromIndex; i < array.length; i++) {
+//     if (array[i] === valueToFind) {
+//       return true;
+//     }
+//   }
+
+//   return false;
+// }
+
+// Function signature
+  // includes(array, valueToFind[, fromIndex=0])
+
+// Function parameters
+  // array
+  // valueToFind - value to search for in the array.
+  // fromIndex - the index to start the search at.
+
+// Return value
+  // true if found
+  // false if not found
+
+// Description
+  // includes() determines whether an array includes searchElem, returning boolean value.
+
+// Requirements:
+  // If valueToFind in array, return true.
+  // If no valueToFind in array, return false.
+  
+  // If no fromIndex, fromIndex is set to 0.
+  // If 0 < fromIndex < array.length, it should start the search at fromIndex.
+  // If fromIndex >= array.length, return false.
+  // If fromIndex < 0, it should start the search at array.length + fromIndex.
+  // If fromIndex < 0 and array.length + fromIndex < 0, fromIndex is set to 0.
+
+  // It should compare valueToFind with array elements using ===.
+  // It should accept an empty array.
+  // It should not modify the array.
+  // It should work for array-like objects.
+
+  // When comparing string characters, includes() is case-sensitive.
+  // It should work for strings.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is not an array, object or string, return false.
+  // If second argument is not supplied, return false.
+  
+function includes(array, valueToFind, fromIndex) {
+
+}
+  
+tests({
+  '': function() {
+    fail();
+  }
+});
+
+</script>
