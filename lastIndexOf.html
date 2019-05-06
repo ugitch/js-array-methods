@@ -31,7 +31,8 @@
   // If searchElement in array, it should return the last index of searchElement.
 
   // If no fromIndex, fromIndex is set to array.length - 1.
-  // If fromIndex > 0, it should start the search at fromIndex.
+  // If 0 < fromIndex < array.length, it should start the search at fromIndex.
+  // If fromIndex >= array.length, fromIndex is set to array.length - 1.
   // If fromIndex < 0, it should start the search at array.length + fromIndex.
   // If fromIndex < 0 and array.length + fromIndex < 0, return -1.
 
@@ -46,13 +47,16 @@
   // It should work for strings.
 
 function lastIndexOf(array, searchElement, fromIndex=array.length-1) {
-  // check if required arguments are missing
+  var length = array.length;
   if (arguments.length === 1) {
     return -1;
   }
   // set fromIndex value using offset from the end of the array
   if (fromIndex < 0) {
-    fromIndex += array.length;
+    fromIndex += length;
+  }
+  else if (fromIndex >= length) {
+    fromIndex = length - 1;
   }
 
   for (var i = fromIndex; i >= 0; i--) {
@@ -78,9 +82,11 @@ tests({
     var index = lastIndexOf([2, 1, 'man'], 'man');
     eq(index, 2);
   },
-  'If fromIndex > 0, it should start the search at fromIndex.': function() {
-    var index = lastIndexOf(['d', 2, 'd'], 'd', 1);
-    eq(index, 0);
+  'If 0 < fromIndex < array.length, it should start the search at fromIndex.': function() {
+    var index = lastIndexOf(['d', 2, 'd'], 'd', 2);
+    eq(index, 2);
+  },
+  'If fromIndex >= array.length, fromIndex is set to array.length - 1.': function () {
   },
   'If fromIndex < 0, it should start the search at array.length + fromIndex.': function() {
     var index = lastIndexOf(['d', 2, 'd'], 'd', -1);
