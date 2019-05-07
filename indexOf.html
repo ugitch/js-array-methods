@@ -44,7 +44,7 @@
   // If no arguments, it should throw TypeError.
   // If first argument is not an array, object or string, return -1.
   // If second argument is not supplied, return -1.
-  // It should work for strings. (currently works only for finding chars in strings, former needs separate logic inside of function)
+  // It should work for strings if valueToFind represents single character.
 
 function indexOf(array, valueToFind, fromIndex=0) {
   var length = array.length;
