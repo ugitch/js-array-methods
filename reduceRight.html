@@ -47,6 +47,7 @@
   // It should pass in the array as fourth argument to the callback.
 
   // It should work for an array-like object.
+  // It should not modify the array.
 
 function reduceRight(array, callback, initialValue) {
   var accumulator = initialValue;
@@ -202,6 +203,13 @@ tests({
       return accumulator + currentValue;
     }, 3);
     eq(reduceResult, 6);
+  },
+  'It should not modify the array.': function() {
+    var testArray = [1, 2];
+    reduceRight(testArray, function() {});
+    eq(testArray[0], 1);
+    eq(testArray[1], 2);
+    eq(testArray.length, 2);
   }
 });
 
