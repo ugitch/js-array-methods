@@ -1,0 +1,60 @@
+<script src="../simpletest.js"></script>
+<script>
+
+// Prototype implementation
+// function slice(array, begin=0, end=array.length) {
+//   var sliceArray = [];
+//   for (var i = begin; i < end; i++) {
+//     sliceArray.push(array[i]);
+//   }
+//   return sliceArray;
+// }
+
+// Function signature
+  // slice(array[, begin=0[, end=array.length]])
+
+// Function parameters
+  // array
+  // begin - index where to start extraction
+  // end - index where to end extraction (exclusive)
+
+// Return value
+  // returns new array
+
+// Method description
+  // slice() returns a shallow copy of a part of an array[begin, end].
+
+// Requirements:
+  // It should return an array.
+  // It should return a new array.
+  // It should not modify the original array.
+  // It should accept an empty array.
+
+  // If no begin, begin is set to 0.
+  // If 0 < begin < array.length, it should begin extraction at array[begin].
+  // If begin >= array.length, return [].
+  // If begin < 0, it should begin extraction at array.length + fromIndex.
+  // If begin < 0 and array.length + begin < 0, begin is set to 0.
+  
+  // If no end, end is set to array.length.
+  // If 0 < end < array.length, it should end extraction up to, but not including array[end].
+  // If end >= array.length, end is set to array.length.
+  // If end < 0, it should end extraction up to, but not including array[array.length + fromIndex].
+  
+  // If elements are objects, it should copy object references into newArray.
+  // It should work for array-like objects.
+  // It should work for string, separating characters into a new array.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is not an array, object or string, return [].
+
+// Method implementation
+function slice(array, begin=0, end=array.length) {
+
+}
+  
+tests({
+
+});
+
+</script>
