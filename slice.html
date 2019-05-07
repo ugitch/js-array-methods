@@ -71,10 +71,21 @@ function slice(array, begin=0, end=array.length) {
     end += length;
   }
 
+  // set sliceArray length
+  sliceArray.length = end - begin;
+  // sliceArray counter
+  var j = 0;
   for (var i = begin; i < end; i++) {
-    sliceArray.push(array[i]);
+    if (typeof array !== 'string' && i in array) {
+      sliceArray[j] = array[i];
+    }
+    // solution for string
+    else if (typeof array === 'string') {
+      sliceArray[j] = array[i];
+    }
+    j++;
   }
-  
+
   return sliceArray;
 }
   
@@ -162,14 +173,13 @@ tests({
     eq(result.length, 2);
   },
   'It should preserve holes in the resulting array.': function() {
-    fail();
     var result = slice([,1, 2,, 5,,]);
     eq(0 in result, false);
     eq(result[1], 1);
-    eq(2 in result, false);
-    eq(result[3], 3);
-    eq(4 in result, false);
-    eq(result[5], 5);
+    eq(result[2], 2);
+    eq(3 in result, false);
+    eq(result[4], 5);
+    eq(5 in result, false);
     eq(result.length, 6);
   },
 
