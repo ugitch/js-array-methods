@@ -43,19 +43,108 @@
   // It should work for array-like objects.
 
   // When comparing string characters, includes() is case-sensitive.
-  // It should work for strings.
+  // It should work for strings if valueToFind represents single character.
 
   // If no arguments, it should throw TypeError.
   // If first argument is not an array, object or string, return false.
   // If second argument is not supplied, return false.
   
-function includes(array, valueToFind, fromIndex) {
+function includes(array, valueToFind, fromIndex=0) {
+  var length =  array.length;
+  if (arguments.length === 1) {
+    return false;
+  }
+  // set fromIndex value using offset from the end of the array
+  if (fromIndex < 0) {
+    (length + fromIndex < 0) ? fromIndex = 0 : fromIndex += length;
+  }
 
+  for (var i = fromIndex; i < length; i++) {
+    if (array[i] === valueToFind) {
+      return true;
+    }
+  }
+
+  return false;
 }
   
 tests({
-  '': function() {
-    fail();
+  'If valueToFind in array, return true.': function() {
+    var result = includes(['a', 2], 2);
+    eq(result, true);
+  },
+  'If no valueToFind in array, return false.': function() {
+    var result = includes(['a', 2], 1);
+    eq(result, false);
+  },
+
+  'If no fromIndex, fromIndex is set to 0.': function() {
+    var result = includes(['a', 2], 'a');
+    eq(result, true);
+  },
+  'If 0 < fromIndex < array.length, it should start the search at fromIndex.': function() {
+    var result = includes(['a', 2], 'a', 1);
+    eq(result, false);
+  },
+  'If fromIndex >= array.length, return false.': function() {
+    var result = includes(['a', 2], 'a', 3);
+    eq(result, false);
+  },
+  'If fromIndex < 0, it should start the search at array.length + fromIndex.': function() {
+    var result = includes(['a', 2], 'a', -1);
+    eq(result, false);
+  },
+  'If fromIndex < 0 and array.length + fromIndex < 0, fromIndex is set to 0.': function() {
+    var result = includes(['a', 2], 'a', -4);
+    eq(result, true);
+  },
+
+  'It should compare valueToFind with array elements using ===.': function() {
+    var result = includes(['a', '2'], 2);
+    eq(result, false);
+  },
+  'It should accept an empty array.': function() {
+    var result = includes([], 2);
+    eq(result, false);
+  },
+  'It should not modify the array.': function() {
+    var array = ['s', 3];
+    includes(array, 's');
+    eq(array[0], 's');
+    eq(array[1], 3);
+    eq(array.length, 2)
+  },
+  'It should work for array-like objects.': function() {
+    var arrayLike = {0: 's', 1: 'd', length: 2};
+    var result = includes(arrayLike, 's');
+    eq(result, true);
+  },
+
+  'When comparing string characters, includes() is case-sensitive.': function() {
+    var result = includes(['S'], 's');
+    eq(result, false);
+  },
+  'It should work for strings if valueToFind represents single character.': function() {
+    var result = includes('sad', 's');
+    eq(result, true);
+  },
+
+  'If no arguments, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      includes();
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is not an array, object or string, return false.': function() {
+    var result = includes(true, 2);
+    eq(result, false);
+  },
+  'If second argument is not supplied, return false.': function() {
+    var result = includes([1]);
+    eq(result, false);
   }
 });
 
