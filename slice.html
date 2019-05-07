@@ -37,24 +37,154 @@
   // If begin < 0 and array.length + begin < 0, begin is set to 0.
   
   // If no end, end is set to array.length.
-  // If 0 < end < array.length, it should end extraction up to, but not including array[end].
-  // If end >= array.length, end is set to array.length.
-  // If end < 0, it should end extraction up to, but not including array[array.length + fromIndex].
+  // If 0 < end <= array.length, it should end extraction up to, but not including array[end].
+  // If end > array.length, end is set to array.length.
+  // If end < 0, it should end extraction up to, but not including array[array.length+fromIndex].
   
-  // If elements are objects, it should copy object references into newArray.
+  // If an element is an object, it should copy its reference into resulting array.
   // It should work for array-like objects.
-  // It should work for string, separating characters into a new array.
+  // It should work for string, making characters separate elements in a resulting array.
+  // It should preserve holes in the resulting array.
 
   // If no arguments, it should throw TypeError.
   // If first argument is not an array, object or string, return [].
 
 // Method implementation
 function slice(array, begin=0, end=array.length) {
+  // if first argument doesn't make sense, return []
+  if (!Array.isArray(array) && typeof array !== 'object' && typeof array !== 'string') {
+    return [];
+  }
+  var length = array.length;
+  var sliceArray = [];
+  // set begin value using offset from the end of the array
+  if (begin < 0) {
+    (begin + length < 0) ? begin = 0 : begin += length;
+  }
+  // limit end
+  if (end > length) {
+    end = length;
+  }
+  // set end value using offset from the end of the array
+  else if (end < 0) {
+    end += length;
+  }
 
+  for (var i = begin; i < end; i++) {
+    sliceArray.push(array[i]);
+  }
+  return sliceArray;
 }
   
 tests({
+  'It should return an array.': function() {
+    var result = slice([]);
+    eq(Array.isArray(result), true);
+  },
+  'It should return a new array.': function() {
+    var testArray = [1, 2];
+    var result = slice(testArray);
+    eq(testArray !== result, true);
+  },
+  'It should not modify the original array.': function() {
+    var testArray = [1, 2];
+    slice(testArray);
+    eq(testArray[0], 1);
+    eq(testArray[1], 2);
+    eq(testArray.length, 2);
+  },
+  'It should accept an empty array.': function() {
+    var result = slice([]);
+    eq(result.length, 0);
+  },
+  
+  'If no begin, begin is set to 0.': function() {
+    var result = slice([1, 2]);
+    eq(result[0], 1);
+  },
+  'If 0 < begin < array.length, it should begin extraction at array[begin].': function() {
+    var result = slice([1, 2, 3], 2);
+    eq(result[0], 3);
+  },
+  'If begin >= array.length, return [].': function() {
+    var result = slice([1, 2, 3], 3);
+    eq(result.length, 0);
+  },
+  'If begin < 0, it should begin extraction at array.length + fromIndex.': function() {
+    var result = slice([1, 2, 3], -3);
+    eq(result[0], 1);
+  },
+  'If begin < 0 and array.length + begin < 0, begin is set to 0.': function() {
+    var result = slice([1, 2, 3], -5);
+    eq(result[0], 1);
+  },
 
+  'If no end, end is set to array.length.': function() {
+    var result = slice([1, 2, 3], 0);
+    eq(result[2], 3);
+  },
+  'If 0 < end <= array.length, it should end extraction up to, but not including array[end].': function() {
+    var result = slice([1, 2, 3], 0, 2);
+    eq(result[2], undefined);
+    eq(result.length, 2);
+  },
+  'If end > array.length, end is set to array.length.': function() {
+    var result = slice([1, 2, 3], 0, 4);
+    eq(result[2], 3);
+    eq(result.length, 3);
+  },
+  'If end < 0, it should end extraction up to, but not including array[array.length+fromIndex].': function() {
+    var result = slice([1, 2, 3], 0, -2);
+    eq(result[0], 1);
+    eq(result.length, 1);
+  },
+
+  'If an element is an object, it should copy its reference into resulting array.': function() {
+    var objectElem = {name: 'Gordon'};
+    var testArray = [1, objectElem];
+    var result = slice(testArray);
+    result[1].name = 'Ugitch';
+    eq(objectElem.name, 'Ugitch');
+  },
+  'It should work for array-like objects.': function() {
+    var arrayLike = {0: 's', 1: 'd', length: 2};
+    var result = slice(arrayLike);
+    eq(result[0], 's');
+    eq(result[1], 'd');
+    eq(result.length, 2);
+  },
+  'It should work for string, making characters separate elements in a resulting array.': function() {
+    var result = slice('sa');
+    eq(result[0], 's');
+    eq(result[1], 'a');
+    eq(result.length, 2);
+  },
+  'It should preserve holes in the resulting array.': function() {
+    fail();
+    var result = slice([,1, 2,, 5,,]);
+    eq(0 in result, false);
+    eq(result[1], 1);
+    eq(2 in result, false);
+    eq(result[3], 3);
+    eq(4 in result, false);
+    eq(result[5], 5);
+    eq(result.length, 6);
+  },
+
+  'If no arguments, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      slice();
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is not an array, object or string, return [].': function() {
+    var result = slice(2, 2, 3);
+    eq(Array.isArray(result), true);
+    eq(result.length, 0);
+  }
 });
 
 </script>
