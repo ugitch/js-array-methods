@@ -48,11 +48,7 @@
 
 function indexOf(array, valueToFind, fromIndex=0) {
   var length = array.length;
-  // no arguments => throw TypeError
-  if (arguments.length === 0) {
-    throw new TypeError('indexOf called on null or undefined');
-  }
-  else if (arguments.length === 1) {
+  if (arguments.length === 1) {
     return -1;
   }
   // set fromIndex value using offset from the end of the array
@@ -104,7 +100,7 @@ tests({
   },
 
   'It should compare valueToFind with array elements using ===.': function() {
-    var index = indexOf(['sass', undefined, 'mvc'], null);
+    var index = indexOf(['sass', '3', 'mvc'], 3);
     eq(index, -1);
   },
   'It should accept an empty array.': function() {
@@ -113,7 +109,7 @@ tests({
   },
   'It should not modify the array.': function() {
     var array = ['s', 'd', 3];
-    var index = indexOf(array, 's', 0);
+    indexOf(array, 's', 0);
     eq(array[0], 's');
     eq(array[1], 'd');
     eq(array[2], 3);
@@ -126,6 +122,7 @@ tests({
   },
 
   'If no arguments, it should throw TypeError.': function() {
+    debugger;
     var isTypeError = false;
     try {
       indexOf();

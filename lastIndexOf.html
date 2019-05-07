@@ -107,7 +107,7 @@ tests({
   },
   'It should not modify the array.': function() {
     var array = ['s', 'd', 3];
-    var index = lastIndexOf(array, 's', 0);
+    lastIndexOf(array, 's', 0);
     eq(array[0], 's');
     eq(array[1], 'd');
     eq(array[2], 3);
