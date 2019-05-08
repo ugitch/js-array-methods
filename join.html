@@ -1,0 +1,138 @@
+<script src='../simpletest.js'></script>
+<script>
+
+// Prototype implementation
+// function join(array, separator=',') {
+// }
+
+// Function signature
+  // join(array[, separator=','])
+
+// Function parameters
+  // array
+  // separator - separator of array elements in a resulting string
+
+// Return value
+  // returns a string with all array elements joined.
+
+// Method description
+  // join() creates and returns a new string concatenating all of the elements in an array.
+
+// Requirements:
+  // It should stringify array[i].
+  // If array[i] is undefined, it is represented as ''.
+  // If array[i] is null, it is represented as ''.
+  // If array[i] is missing, it is represented as ''.
+
+  // It should concatenate stringified elements.
+  // It should put separator between stringified elements.
+  // If no separator, separator is set to ','.
+
+  // It should return a new string.
+  // If array.length === 0, return an empty string.
+  // If array.length === 1, return stringified element without separator.
+
+  // It should not modify an array.
+  // It should work for array-like objects.
+  // It should work for string instead of array.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is not an array, object or string, return ''.
+
+// Method implementation
+function join(array, separator=',') {
+  var length = array.length;
+  var joinString = '';
+
+  for (var i = 0; i < length; i++) {
+    if (array[i] != undefined) {
+      joinString += array[i].toString();
+    }
+    // adding separator for all the elements except for the last one
+    if (i < length - 1) {
+      joinString += separator;
+    }
+  }
+
+  return joinString;
+}
+
+tests({
+  'It should stringify array[i].': function() {
+    var result = join([true]);
+    eq(result, 'true');
+  },
+  'If array[i] is undefined, it is represented as "".': function() {
+    var result = join([undefined]);
+    eq(result, '');
+  },
+  'If array[i] is null, it is represented as "".': function() {  
+    var result = join([null]);
+    eq(result, '');
+  },
+  'If array[i] is missing, it is represented as "".': function() {  
+    var result = join([,]);
+    eq(result, '');
+  },
+
+  'It should concatenate stringified elements.': function() {
+    var result = join([,1,, 'a', null, undefined],'');
+    eq(result, '1a');
+  },
+  'It should put separator between stringified elements.': function() {
+    var result = join([1, 'a', null], ' ');
+    eq(result, '1 a ');
+  },
+  'If no separator, separator is set to ",".': function() {
+    var result = join([1, 'a', null]);
+    eq(result, '1,a,');
+  },
+
+  'It should return a new string.': function() {
+    var result = join([1, 'a', null]);
+    eq(typeof result, 'string');
+  },
+  'If array.length === 0, return an empty string.': function() {
+    var result = join([]);
+    eq(result.length, 0);
+  },
+  'If array.length === 1, return stringified element without separator.': function() {
+    var result = join([1], ' ');
+    eq(result, '1');
+  },
+
+  'It should not modify an array.': function() {
+    var testArray = [1, 'a', undefined];
+    join(testArray);
+    eq(testArray[0], 1);
+    eq(testArray[1], 'a');
+    eq(testArray[2], undefined);
+    eq(testArray.length, 3);
+  },
+  'It should work for array-like objects.': function() {
+    var arrayLike = {0: 's', 1: 'd', length: 2};
+    var result = join(arrayLike);
+    eq(result, 's,d');
+  },
+  'It should work for string instead of array.': function() {
+    var result = join('s a');
+    eq(result, 's, ,a');
+  },
+
+  'If no arguments, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      join();
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is not an array, object or string, return "".': function() {
+    var result = join(2, ' ');
+    eq(typeof result, 'string');
+    eq(result.length, 0);
+  }
+});
+
+</script>
