@@ -45,6 +45,7 @@ function join(array, separator=',') {
   var joinString = '';
 
   for (var i = 0; i < length; i++) {
+    // use equals instead of strict equals (undefined, null & array hole)
     if (array[i] != undefined) {
       joinString += array[i].toString();
     }
