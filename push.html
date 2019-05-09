@@ -1,0 +1,58 @@
+<script src='../simpletest.js'></script>
+<script>
+
+// Prototype implementation
+// function push(array) {
+//   var pushIndex = length;
+  
+//   for (var i = 1; i < arguments.length; i++) {
+//     array[pushIndex] = arguments[i];
+//     pushIndex++;
+//   }
+
+//   return array.length;
+// }
+
+// Function signature
+  // push(array, elem1[, ...[, elemN]])
+
+// Function parameters
+  // array
+  // elemN - elements to add to the end of the array
+
+// Return value
+  // returns the new length of the array
+
+// Function description
+  // push() adds one or more elements to the end of an array.
+
+// Requirements:
+  // It should add an element to the end of the array.
+  // It should add multiple elements to the end of the array.
+
+  // It should work for array-like objects.
+  // It should update "length" property of array-like objects.
+
+  // If object has 'length' property for different purpose, first element is inserted at i = 0.
+  // If object has 'length' property for different purpose, "length" is set to number of element additions.
+  // If object has no 'length' property, first element is inserted at i = 0.
+  // If object has no 'length' property, "length" is created and set to number of element additions.
+  
+  // It should modify an existing object.
+  // It should return a new length of the object.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is a string, it should throw TypeError.
+  // If first argument is a primitive value, return arguments.length - 1.
+
+// Function implementation
+function push(array) {
+}
+
+tests({
+  '': function() {
+    fail();
+  }
+});
+
+</script>
