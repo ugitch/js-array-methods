@@ -63,7 +63,7 @@ function push(array) {
     array.length = 0;
   }
 
-  // need for repeated assignment cause of non-standard 'length' property
+  // same assignment again, due to eventual non-standard 'length' property
   pushIndex = array.length;
 
   // adding elements to array

@@ -1,0 +1,114 @@
+<script src='../simpletest.js'></script>
+<script>
+
+// Prototype implementation
+// function pop(array) {
+//   return array[length-1];
+// }
+
+// Function signature
+  // pop(array)
+
+// Function parameters
+  // array
+
+// Return value
+  // removed element from array
+    // or
+  // undefined if empty array
+
+// Function description
+  // pop() removes the last element from an array
+
+// Requirements:
+  // It should remove the last element from the array.
+  // It should work for array-like objects.
+  // It should update "length" property of array-like objects.
+
+  // It should return the last element from the array.
+  // It should return undefined if empty array.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is a string, it should throw TypeError.
+  // If first argument is a primitive value, return undefined.
+    
+// Function implementation
+function pop(array) {
+  // also throws TypeError if no arguments
+  var last = array[array.length - 1];
+
+  // if string is first argument, throw TypeError
+  if (typeof array === 'string') {
+    throw new TypeError(`Cannot delete property '${array.length-1}' 
+                        of ${Object.prototype.toString.call(array)}`);
+  }
+  // if array is not an object, return immmediately
+  else if (typeof array !== 'object') {
+    return undefined;
+  }
+  // empty array
+  else if (array.length === 0) {
+    return undefined;
+  }
+
+  // explicit deletion only for array-like objects
+  if (!Array.isArray(array)) {
+    delete array[array.length - 1];  
+  }
+  array.length--;
+
+  return last;
+}
+
+tests({
+  'It should remove the last element from the array.': function() {
+    var arr = [1, 2];
+    pop(arr);
+    eq(arr.length, 1);
+    eq(arr[0], 1)
+  },
+  'It should work for array-like objects.': function() {
+    var arrayLike = {0: 'mam', 1: 'dad', 2: 'sis', length: 3};
+    pop(arrayLike);
+    eq(arrayLike[2], undefined);
+  },
+  'It should update "length" property of array-like objects.': function() {
+    var arrayLike = {0: 'mam', 1: 'dad', 2: 'sis', length: 3};
+    pop(arrayLike);
+    eq(arrayLike.length, 2);
+  },
+
+  'It should return the last element from the array.': function() {
+    var result = pop([1, 2]);
+    eq(result, 2);
+  },
+  'It should return undefined if empty array.': function() {
+    var result = pop([]);
+    eq(result, undefined);
+  },
+
+  'If no arguments, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      pop();
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is a string, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      pop('vacation', 's');
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is a primitive value, return undefined.': function() {
+    var result = pop(2);
+    eq(result, undefined);
+  },
+});
+
+</script>
