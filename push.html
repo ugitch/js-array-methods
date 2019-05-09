@@ -21,7 +21,7 @@
   // elemN - elements to add to the end of the array
 
 // Return value
-  // returns the new length of the array
+  // the new length of the array
 
 // Function description
   // push() adds one or more elements to the end of an array.
@@ -36,9 +36,7 @@
   // If an object has non-parsable-to-int 'length' property, "length" is set to 0 before insertion of first element.
   // If an object has no 'length' property, "length" is created and set to 0 before insertion of first element.
   
-  // It should modify an array.
   // It should return a new length of the array.
-
   // If no arguments, it should throw TypeError.
   // If first argument is a string, it should throw TypeError.
   // If first argument is a primitive value, return arguments.length - 1.
@@ -50,9 +48,8 @@ function push(array) {
   var pushIndex = array.length;
 
   // if string is first argument, throw TypeError
-  if (typeof array === 'string' || 
-      Object.prototype.toString.call(array) === '[object String]') {
-    throw new TypeError(`Cannot assign to read only property "length" of ${typeof array}`);
+  if (typeof array === 'string') {
+    throw new TypeError(`Cannot assign to read only property 'length' of ${Object.prototype.toString.call(array)}`);
   }
   // if array is not an object, return immmediately
   // kept the weird solution of native push()
@@ -117,17 +114,11 @@ tests({
     eq(array[0], 'ab');
   },
 
-  'It should modify an array.': function() {
-    var testArray = [1, 2];
-    push(testArray, 'b');
-    eq(testArray[2], 'b');
-  },
   'It should return a new length of the array': function() {
     var testArray = [1, 2];
     var result = push(testArray, 'b');
     eq(result, 3);
   },
-
   'If no arguments, it should throw TypeError.': function() {
     var isTypeError = false;
     try {
