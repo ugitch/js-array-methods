@@ -17,7 +17,7 @@
 
 // Function parameters
   // array
-  // valueToFind - value to search for in the array.
+  // valueToFind - the value to search for in the array.
   // fromIndex - the index to start the search at.
 
 // Return value
@@ -25,7 +25,7 @@
   // false if not found
 
 // Description
-  // includes() determines whether an array includes searchElem, returning boolean value.
+  // includes() determines whether an array includes valueToFind, returning boolean value.
 
 // Requirements:
   // If valueToFind in array, return true.
@@ -41,6 +41,7 @@
   // It should accept an empty array.
   // It should not modify the array.
   // It should work for array-like objects.
+  // It should treat holes in the array as undefined.
 
   // When comparing string characters, includes() is case-sensitive.
   // It should work for strings if valueToFind represents single character.
@@ -117,6 +118,10 @@ tests({
   'It should work for array-like objects.': function() {
     var arrayLike = {0: 's', 1: 'd', length: 2};
     var result = includes(arrayLike, 's');
+    eq(result, true);
+  },
+  'It should treat holes in the array as undefined.': function() {
+    var result = includes([1,, 2], undefined);
     eq(result, true);
   },
 
