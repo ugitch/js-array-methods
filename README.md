@@ -9,7 +9,7 @@ Though being aware of ternary operator and using it, thanks @joooda for the conv
 
 Thanks @janelledement for reminding me I don't need an extra variable for callback binding.
 
-Thanks @kyleknaggs for reminding me to test whether callback is run at all.
+Thanks @kyleknaggs for reminding me to test whether callback is run at all. For teaching me how to call function using call() and apply().
 
 @vincenttern, some interesting views, but very imprecise.
 

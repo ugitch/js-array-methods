@@ -2,12 +2,12 @@
 <script>
 
 // Prototype implementation
-// function pop(array) {
-//   return array[length-1];
+// function shift(array) {
+//   return array[0];
 // }
 
 // Function signature
-  // pop(array)
+  // shift(array)
 
 // Function parameters
   // array
@@ -18,28 +18,30 @@
   // undefined if empty array
 
 // Function description
-  // pop() removes the last element from an array
+  // shift() removes the first element from an array
 
 // Requirements:
-  // It should remove the last element from the array.
-  // It should work for array-like objects.
+  // It should shift elements from index to index-1.
   // It should update "length" property.
-  // It should return the last element from the array.
+
+  // It should return array[0].
   // It should return undefined if empty array.
+
+  // It should work array-like objects.
+  // It should remove arrayLike[length-1] for array-like objects.
 
   // If no arguments, it should throw TypeError.
   // If first argument is a string, it should throw TypeError.
   // If first argument is a primitive value, return undefined.
-    
-// Function implementation
-function pop(array) {
+ 
+// Function implementation 
+function shift(array) {
   // also throws TypeError if no arguments
-  var last = array[array.length - 1];
+  var first = array[0];
 
   // if string is first argument, throw TypeError
   if (typeof array === 'string') {
-    throw new TypeError(`Cannot delete property '${array.length-1}' 
-                        of ${Object.prototype.toString.call(array)}`);
+    throw new TypeError(`Cannot assign to read only property '0' of ${Object.prototype.toString.call(array)}`);
   }
   // if array is not an object, return immmediately
   else if (typeof array !== 'object') {
@@ -50,46 +52,60 @@ function pop(array) {
     return undefined;
   }
 
-  // explicit deletion only for array-like objects
-  if (!Array.isArray(array)) {
-    delete array[array.length - 1];  
+  // shift values from index to index-1
+  for (var i = 0; i < array.length - 1; i++) {
+    array[i] = array[i+1];
   }
+
+  // regular array-like objects
+  if (!(Array.isArray(array))) {
+    delete array[array.length-1];
+  }
+  // correct array.length
   array.length--;
 
-  return last;
+  return first;
 }
 
 tests({
-  'It should remove the last element from the array.': function() {
-    var arr = [1, 2];
-    pop(arr);
-    eq(arr.length, 1);
-    eq(arr[0], 1)
-  },
-  'It should work for array-like objects.': function() {
-    var arrayLike = {0: 'mam', 1: 'dad', 2: 'sis', length: 3};
-    pop(arrayLike);
-    eq(arrayLike[2], undefined);
+  'It should shift values from index to index-1.': function() {
+    var arr = [1, 'a'];
+    shift(arr);
+    eq(arr[0], 'a');
   },
   'It should update "length" property.': function() {
-    var arrayLike = {0: 'mam', 1: 'dad', 2: 'sis', length: 3};
-    pop(arrayLike);
-    eq(arrayLike.length, 2);
+    var arr = [1, 2];
+    shift(arr);
+    eq(arr.length, 1);
   },
 
-  'It should return the last element from the array.': function() {
-    var result = pop([1, 2]);
-    eq(result, 2);
+  'It should return array[0].': function() {
+    var arr = [1, 2];
+    var result = shift(arr);
+    eq(result, 1);
   },
   'It should return undefined if empty array.': function() {
-    var result = pop([]);
+    var result = shift([]);
     eq(result, undefined);
+  },
+
+  'It should work for array-like objects.': function() {
+    var arrayLike = {0: 'mam', 1: 'dad', 2: 'sis', length: 3};
+    shift(arrayLike);
+    eq(arrayLike[0], 'dad');
+    eq(arrayLike[1], 'sis');
+    eq(arrayLike.length, 2);
+  },
+  'It should remove arrayLike[length-1] for array-like objects.': function() {
+    var arrayLike = {0: 'mam', 1: 'dad', 2: 'sis', length: 3};
+    shift(arrayLike);
+    eq(arrayLike[2], undefined);
   },
 
   'If no arguments, it should throw TypeError.': function() {
     var isTypeError = false;
     try {
-      pop();
+      shift();
     } catch(e) {
       isTypeError = e instanceof TypeError;
     }
@@ -98,14 +114,14 @@ tests({
   'If first argument is a string, it should throw TypeError.': function() {
     var isTypeError = false;
     try {
-      pop('vacation', 's');
+      shift('vacation', 's');
     } catch(e) {
       isTypeError = e instanceof TypeError;
     }
     eq(isTypeError, true);
   },
   'If first argument is a primitive value, return undefined.': function() {
-    var result = pop(2);
+    var result = shift(2);
     eq(result, undefined);
   },
 });
