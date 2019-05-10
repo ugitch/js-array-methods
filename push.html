@@ -37,6 +37,7 @@
   // If an object has no 'length' property, "length" is created and set to 0 before insertion of first element.
   
   // It should return a new length of the array.
+
   // If no arguments, it should throw TypeError.
   // If first argument is a string, it should throw TypeError.
   // If first argument is a primitive value, return arguments.length - 1.
@@ -119,6 +120,7 @@ tests({
     var result = push(testArray, 'b');
     eq(result, 3);
   },
+
   'If no arguments, it should throw TypeError.': function() {
     var isTypeError = false;
     try {

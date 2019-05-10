@@ -1,0 +1,47 @@
+<script src='../simpletest.js'></script>
+<script>
+
+// Prototype implementation
+// function unshift(array) {
+//   for (var i = 1; i < arguments.length; i++) {}
+//   return array.length;
+// }
+
+// Function signature
+  // unshift(array, elem1[, ...[, elemN]])
+
+// Function parameters
+  // array
+  // elemN - elements to add to the front of the array
+
+// Return value
+  // new length of the array
+
+// Function description
+  // unshift() adds one or more elements to the beginning of an array
+
+// Requirements:
+  // It should add an element to the front of the array.
+  // It should add multiple elements to the front of the array (same order).
+  // It should shift existing array elements from index to index + (args.length - 1).
+
+  // It should work for array-like objects.
+  // If regular array-like object, it should update "length" property.
+
+  // It should return a new length of the array.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is a string, it should throw TypeError.
+  // If first argument is a primitive value, return arguments.length - 1.
+
+// Function implementation
+function unshift(array) {
+}
+
+tests({
+  '': function() {
+    fail();
+  }
+});
+
+</script>
