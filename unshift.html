@@ -2,10 +2,11 @@
 <script>
 
 // Prototype implementation
-// function unshift(array) {
-//   for (var i = 1; i < arguments.length; i++) {}
-//   return array.length;
-// }
+// function unshift(array)
+//  1) shift array elements for arguments.length - 1 spots in array
+//  2) add new elements to the front of the array
+//  3) update length(array-like objects)   
+//  4) return new length of the array
 
 // Function signature
   // unshift(array, elem1[, ...[, elemN]])
@@ -22,11 +23,11 @@
 
 // Requirements:
   // It should add an element to the front of the array.
-  // It should add multiple elements to the front of the array (same order).
+  // It should add multiple elements to the front of the array (same order as arguments).
   // It should shift existing array elements from index to index + (args.length - 1).
 
   // It should work for array-like objects.
-  // If regular array-like object, it should update "length" property.
+  // If array-like object, it should update "length" property.
 
   // It should return a new length of the array.
 
@@ -36,12 +37,103 @@
 
 // Function implementation
 function unshift(array) {
+  var unshiftIndex = 0;
+  var howManyNewElements = arguments.length - 1;
+
+  // no arguments, throw TypeError
+  if (arguments.length === 0) {
+    throw new TypeError('Cannot convert undefined or null to object');
+  }
+  // if string is first argument, throw TypeError
+  else if (typeof array === 'string') {
+    throw new TypeError(`Cannot assign to read only property 'length' of ${Object.prototype.toString.call(array)}`);
+  }
+  // if array is not an object, return immmediately
+  // native unshift() solution
+  else if (typeof array !== 'object') {
+    return arguments.length - 1;
+  }
+
+  // shift array elements 'howManyNewElements' spots to the right
+  for (var i = array.length - 1; i >= 0; i--) {
+    array[i+howManyNewElements] = array[i];
+  }
+
+  // add elements to the front of the array
+  for (var i = 1; i < arguments.length; i++) {
+    array[unshiftIndex] = arguments[i];
+    unshiftIndex++;
+  }
+
+  // update 'length' property of array-like object
+  if (!Array.isArray(array)) {
+    array.length += howManyNewElements;
+  }
+
+  return array.length;
 }
 
 tests({
-  '': function() {
-    fail();
-  }
+  'It should add an element to the front of the array.': function() {
+    var testArray = [1];
+    unshift(testArray, 'b');
+    eq(testArray[0], 'b');
+  },
+  'It should add multiple elements to the front of the array (same order as arguments).': function() {
+    var testArray = [1];
+    unshift(testArray, 'a', 'b');
+    eq(testArray[0], 'a');
+    eq(testArray[1], 'b');
+  },
+  'It should shift existing array elements from index to index + (args.length - 1).': function() {
+    var testArray = [1, true];
+    unshift(testArray, 'a', 'b');
+    eq(testArray.length, 4);
+    eq(testArray[2], 1);
+    eq(testArray[3], true);
+  },
+
+  'It should work for array-like objects.': function() {
+    var arrayLike = {0: 'mum', length: 1};
+    unshift(arrayLike, 'ab', 'cd');
+    eq(arrayLike[0], 'ab');
+    eq(arrayLike[1], 'cd');
+    eq(arrayLike[2], 'mum');
+  },
+  'If array-like object, it should update "length" property.': function() {
+    var arrayLike = {0: 'mum', length: 1};
+    unshift(arrayLike, 'ab', 'cd');
+    eq(arrayLike.length, 3);
+  },
+
+  'It should return a new length of the array.': function() {
+    var testArray = [1, false];
+    var result = unshift(testArray, 'b');
+    eq(result, 3);
+  },
+
+  'If no arguments, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      unshift();
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is a string, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      unshift('vacation', ' ');
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is a primitive value, return arguments.length - 1.': function() {
+    var result = unshift(2);
+    eq(result, 0);
+  },
 });
 
 </script>
