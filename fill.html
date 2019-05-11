@@ -1,0 +1,57 @@
+<script src="../simpletest.js"></script>
+<script>
+
+// Prototype implementation
+// function fill(array, value, start=0, end=array.length) {
+//   for (var i = start; i < end; i++) {
+//       array[i] = value;
+//   }
+//   return array;
+// }
+
+// Function signature
+  // fill(array, value[, start[, end]])
+
+// Function parameters
+  // array
+  // value - static value to fill an array
+  // start=0 (inclusive)
+  // end=array.length (exclusive)
+
+// Return value
+  // modified array
+
+// Function description
+  // fill() fills all the array elements from start to end index with 'value'.
+
+// Requirements
+  // If no start, start is set to 0.
+  // If start >= array.length, no effect.
+  // If start < array.length, it should start filling at array[start].
+  // If start < 0, it should start filling at array[array.length + start].
+
+  // If no end, end is set to array.length.
+  // If end >= array.length, it should fill to the end of the array.
+  // If end < array.length, it should fill to array[end], excluding it.
+  // If end < 0, it should fill to array[array.length+end], excluding it.
+ 
+  // It should fill array[start, end) with value.
+  // It should work with array-like objects.
+  // If value is an object, it should fill array with object references.
+  // It should return an array.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is a string, it should throw TypeError.
+  // If first argument is not an array-like object, return it.
+
+// Function implementation
+function fill(array, value, start=0, end=array.length) {
+}
+
+tests({
+  '': function() {
+    fail();
+  }
+});
+
+</script>
