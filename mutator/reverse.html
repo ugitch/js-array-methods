@@ -25,57 +25,23 @@
   // reverse() reverses an array in place. 
 
 // Requirements
-  // If array.length odd, leave array[array.length/2] untouched.
-  // It should return reversed array.
+  // It should reverse elements in array.
+  // If array.length is odd, array[array.length/2] stays in place.
 
-  // If regular array-like object, it should return reversed array.
+  // It should return reversed array.
+  // It should work for array-like objects.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is a string, it should throw TypeError.
+  // If first argument is not an array-like object, return it.
 
 // Function implementation
-function reverse(array) {
-  var length = array.length;
-
-  for (var i = 0; i < length/2; i++) {
-    var swap = array[i];
-    array[i] = array[length-1-i];
-    array[length-1-i] = swap;
-  }
-
-  return array;
-}
+function reverse(array) {}
 
 tests({
-  'If array.length odd, leave array[array.length/2] untouched.': function() {
-    var result = reverse([1, 2, 3]);
-    eq(result[1], 2);
-  },
-  'It should return reversed array.': function() {
-    var result = reverse([1, 2, 3]);
-    eq(result[0], 3);
-    eq(result[1], 2);
-    eq(result[2], 1);
-  },
-  'It should modify the array.': function() {
-    var array = [1, 2, 3];
-    reverse(array);
-    eq(array[0], 3);
-    eq(array[1], 2);
-    eq(array[2], 1);
-  },
-
-  'If regular array-like object, it should return reversed array.': function() {
-    var arrayLike = {0: 's', 1: 'd', 2: 'f', length: 3};
-    var result = reverse(arrayLike);
-    eq(result[0], 'f');
-    eq(result[1], 'd');
-    eq(result[2], 's');
-  },
-  'If regular array-like object, it should modify the array.': function() {
-    var arrayLike = {0: 's', 1: 'd', 2: 'f', length: 3};
-    reverse(arrayLike);
-    eq(arrayLike[0], 'f');
-    eq(arrayLike[1], 'd');
-    eq(arrayLike[2], 's');
-  },
+  '': function() {
+    fail();
+  }
 });
 
 </script>
