@@ -36,11 +36,73 @@
   // If first argument is not an array-like object, return it.
 
 // Function implementation
-function reverse(array) {}
+function reverse(array) {
+  // also throws TypeError if no arguments
+  var length = array.length;
+
+  // if string is first argument, throw TypeError
+  if (typeof array === 'string') {
+    throw new TypeError(`Cannot assign to read only property '0' of ${Object.prototype.toString.call(array)}`);
+  }
+
+  for (var i = 0; i < length/2; i++) {
+    var swap = array[i];
+    array[i] = array[length-1-i];
+    array[length-1-i] = swap;
+  }
+  return array;
+}
 
 tests({
-  '': function() {
-    fail();
+  'It should reverse elements in array.': function() {
+    var arr = [1, 2];
+    reverse(arr);
+    eq(arr[0], 2);
+    eq(arr[1], 1);
+  },
+  'If array.length is odd, array[array.length/2] stays in place.': function() {
+    var arr = [1, 2, 3];
+    reverse(arr);
+    eq(arr[0], 3);
+    eq(arr[1], 2);
+    eq(arr[2], 1);
+  },
+
+  'It should return reversed array.': function() {
+    var arr = [1, 2];
+    var reversed = reverse(arr);
+    eq(reversed[0], 2);
+    eq(reversed[1], 1);
+  },
+  'It should work for array-like objects.': function() {
+    var arrayLike = {0: true, 1: 'd', 2: 'f', length: 3};
+    reverse(arrayLike);
+    eq(arrayLike[0], 'f');
+    eq(arrayLike[1], 'd');
+    eq(arrayLike[2], true);
+  },
+
+  'If no arguments, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      reverse();
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is a string, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      reverse('vacation');
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is not an array-like object, return it.': function() {
+    var reversed = reverse(2);
+    eq(reversed, 2);
   }
 });
 
