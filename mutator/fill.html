@@ -41,6 +41,7 @@
   // It should work for array-like objects.
   // If value is an object, it should fill array with object references.
   // It should return an array.
+  // It should return modified array.
 
   // If no arguments, it should throw TypeError.
   // If first argument is a string, it should throw TypeError.
@@ -158,6 +159,12 @@ tests({
     var array = [1, 2];
     var result = fill(array, 0);
     eq(Array.isArray(result), true);
+  },
+  'It should return modified array.': function() {
+    var array = [1, 2];
+    var result = fill(array, 0);
+    eq(result[0], 0);
+    eq(result[1], 0);
   },
 
   'If no arguments, it should throw TypeError.': function() {

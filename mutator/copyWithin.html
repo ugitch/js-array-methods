@@ -1,0 +1,289 @@
+<script src="../simpletest.js"></script>
+<script>
+  
+// Prototype implementation
+// function copyWithin(array, target, start=0, end=array.length) {
+//   var sequence = [];
+//   for (var i = start; i < end; i++)
+//     sequence.push(array[i]);
+//   var counter = 0;
+//   for (var i = target; i < array.length; i++) {
+//     if (counter < sequence.length)
+//       array[i] = sequence[counter];
+//     else
+//       break;
+//     counter++
+//   }
+//   return array;
+// }
+
+// Function signature
+  // copyWithin(array, target[, start[, end]])
+
+// Function parameters
+  // array
+  // target - index of destination for copied sequence
+  // start=0 - start index of copy sequence
+  // end=array.length - end index of copy sequence (exclusive)
+
+// Return value
+  // modified array
+
+// Function description
+  // copyWithin() copies a sequence of array elements within the array, retaining length of the array.
+
+// Requirements:
+  // If target >= array.length, no action.
+  // If target < 0, target is set to array.length + target.
+  // If target < 0 and array.length + target < 0, set target to 0.
+
+  // If start >= array.length, no action.
+  // If no start, start is set to 0.
+  // If start < 0, start = array.length + start.
+  // If start < 0 and array.length + start < 0, set start to 0.
+  
+  // If end > array.length, end is set to array.length.
+  // If no end, end is set to array.length.
+  // If end < 0, end = array.length + end.
+
+  // If end - start <= 0, no action.
+  // It should copy (end-start) elements from [start, end) to target.
+  // If target > start, trim copied sequence to fit array.length.
+
+  // It should not modify array.length.
+  // It should return an array.
+  // It should return modified array.
+  // It should work for array-like objects.
+  // It should preserve holes.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is a string, it should throw TypeError.
+  // If first argument is not an array-like object, return it.
+
+// Function implementation
+function copyWithin(array, target, start=0, end=array.length) {
+  // also throws TypeError if no arguments
+  var length = array.length;
+  var sequence = []; // copied sequence
+  var seqIndex = undefined;
+
+  // if string is first argument, throw TypeError
+  if (typeof array === 'string') {
+    throw new TypeError(`Cannot assign to read only property '0' of ${Object.prototype.toString.call(array)}`);
+  }
+  // if array is not an object, return immmediately
+  else if (typeof array !== 'object') {
+    return array;
+  }
+
+  if (target >= length) {
+    return array;
+  }
+  // set 'target' value using offset from the end of the array 
+  else if (target < 0) {
+    target + length < 0 ? target = 0 : target += length;
+  }
+
+  if (start >= length) {
+    return array;
+  }
+  // set 'start' value using offset from the end of the array 
+  else if (start < 0) {
+    start + length < 0 ? start = 0 : start += length;
+  }
+
+  if (end > length) {
+    end = length;
+  }
+  //
+  else if (end < 0) {
+    end += length;
+  }
+
+  if (end - start <= 0) {
+    return array;
+  }
+
+  seqIndex = 0;
+  // copy the sequence
+  for (var i = start; i < end; i++) {
+    if (i in array) {
+      sequence[seqIndex] = array[i];
+    }
+    seqIndex++;
+  }
+  // add empty elements at the end of array
+  sequence.length = end - start;
+
+  seqIndex = 0;
+  // start traversing array from target, trimming sequence also
+  for (var i = target; i < length; i++) {
+    // copy elements from copied sequence into an array
+    if (seqIndex < sequence.length) {
+      if (seqIndex in sequence) {
+        array[i] = sequence[seqIndex];
+      }
+      else {
+        delete array[i];
+      }
+    } 
+    // if sequence is finished
+    else {
+      break;
+    }
+    seqIndex++;
+  }
+
+  return array;
+}
+
+
+tests({
+  'If target >= array.length, no action.': function() {
+    var array = [1, 2];
+    copyWithin(array, 2);
+    eq(array[0], 1);
+    eq(array[1], 2);
+  },
+  'If target < 0, target is set to array.length + target.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, -1, 0);
+    eq(array[2], 1);
+    eq(array.length, 3);
+  },
+  'If target < 0 and array.length + target < 0, set target to 0.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, -4, 1);
+    eq(array[0], 2);
+    eq(array[1], 3);
+    eq(array[2], 3);;    
+  },
+
+  'If start >= array.length, no action.': function() {
+    var array = [1, 2];
+    copyWithin(array, 0, 2);
+    eq(array[0], 1);
+    eq(array[1], 2);
+  },
+  'If no start, start is set to 0.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, 1);
+    eq(array[0], 1);
+    eq(array[1], 1);
+    eq(array[2], 2);
+  },
+  'If start < 0, start = array.length + start.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, 0, -2);
+    eq(array[0], 2);
+    eq(array[1], 3);
+    eq(array[2], 3);
+  },
+  'If start < 0 and array.length + start < 0, set start to 0.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, 1, -4);
+    eq(array[0], 1);
+    eq(array[1], 1);
+    eq(array[2], 2);
+  },
+
+  'If end > array.length, end is set to array.length.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, 1, 0, 4);
+    eq(array[0], 1);
+    eq(array[1], 1);
+    eq(array[2], 2);
+  },
+  'If no end, end is set to array.length.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, 1, 0);
+    eq(array[0], 1);
+    eq(array[1], 1);
+    eq(array[2], 2);
+  },
+  'If end < 0, end = array.length + end.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, 1, 0, -2);
+    eq(array[0], 1);
+    eq(array[1], 1);
+    eq(array[2], 3);
+  },
+
+  'If end - start <= 0, no action.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, 1, 1, -2);
+    eq(array[0], 1);
+    eq(array[1], 2);
+    eq(array[2], 3);
+  },
+  'It should copy (end-start) elements from [start, end) to target.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, 0, 1, 3);
+    eq(array[0], 2);
+    eq(array[1], 3);
+    eq(array[2], 3);
+  },
+  'If target > start, trim copied sequence to fit array.length.': function() {
+    var array = [1, 2, 3];
+    copyWithin(array, 1, 0, 3);
+    eq(array[0], 1);
+    eq(array[1], 1);
+    eq(array[2], 2);
+    eq(array[3], undefined);
+  },
+
+  'It should not modify array.length.': function() {
+    var array = [1, 2];
+    copyWithin(array, 2);
+    eq(array.length, 2);
+  },
+  'It should return an array.': function() {
+    var array = [1, 2];
+    var result = copyWithin(array, 2);
+    eq(Array.isArray(result), true);
+  },
+  'It should return modified array.': function() {
+    var array = [1, 2];
+    var result = copyWithin(array, 1);
+    eq(result[1], 1);
+  },
+  'It should work for array-like objects.': function() {
+    arrayLike = {0: 's', 1: 'd', 2: 'y', 3: 'z', length: 4};
+    copyWithin(arrayLike, 0, -2, 4);
+    eq(arrayLike[0], 'y');
+    eq(arrayLike[1], 'z');
+    eq(arrayLike[2], 'y');
+    eq(arrayLike[3], 'z');
+  },
+  'It should preserve holes.': function() {
+    var array = [1, ,2, 3];
+    copyWithin(array, 2, 0, 2);
+    eq(array[2], 1);
+    eq(3 in array, false);
+  },
+
+  'If no arguments, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      copyWithin();
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is a string, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      copyWithin('vacation', 0);
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is not an array-like object, return it.': function() {
+    var result = copyWithin(true, 0);
+    eq(result, true);
+  }
+});
+
+</script>
