@@ -54,7 +54,7 @@
   // It should return an array.
   // It should return modified array.
   // It should work for array-like objects.
-  // It should preserve holes.
+  // It should copy holes in the array.
 
   // If no arguments, it should throw TypeError.
   // If first argument is a string, it should throw TypeError.
@@ -123,11 +123,12 @@ function copyWithin(array, target, start=0, end=array.length) {
       if (seqIndex in sequence) {
         array[i] = sequence[seqIndex];
       }
+      // make a hole in the array
       else {
         delete array[i];
       }
     } 
-    // if sequence is finished
+    // end of sequence array
     else {
       break;
     }
@@ -136,7 +137,6 @@ function copyWithin(array, target, start=0, end=array.length) {
 
   return array;
 }
-
 
 tests({
   'If target >= array.length, no action.': function() {
@@ -255,7 +255,7 @@ tests({
     eq(arrayLike[2], 'y');
     eq(arrayLike[3], 'z');
   },
-  'It should preserve holes.': function() {
+  'It should copy holes in the array.': function() {
     var array = [1, ,2, 3];
     copyWithin(array, 2, 0, 2);
     eq(array[2], 1);
