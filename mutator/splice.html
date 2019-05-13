@@ -1,0 +1,51 @@
+<script src="../simpletest.js"></script>
+<script>
+
+// Prototype implementation
+
+
+// Function signature
+  // splice(array, start[, deleteCount=array.length-start[, elemToAddN]])
+
+// Function parameters
+  // array
+  // start - index at which to start changing the array.
+  // deleteCount=array.length-start - number of elements to remove from array[start]
+  // elemToAddN - element(s) to add to the array, beginning from start.
+
+// Return value
+  // an array containing deleted elements. 
+
+// Function description
+  // splice() removes or replaces existing array elements and/or adds new elements.
+  
+// Requirements
+
+  // If start > array.length, start = array.length.
+  // If start < 0, start = start + array.length.
+  // If start < 0 and  start + array.length < 0, set start to 0.
+
+  // If no deleteCount, deleteCount = array.length - start.
+  // If deleteCount <= 0, no action.
+
+  // If numberOfElementsToInsert !== numberOfElementsToRemove, array.length is modified.
+
+  // It should return an array.
+  // It should return an array containing deleted elements.
+  // It should work for array-like objects.
+  // It should not treat holes in the array any differently.
+
+  // If no arguments, it should throw TypeError.
+  // If first argument is a string, it should throw TypeError.
+  // If first argument is not an array-like object, return an empty array.
+
+// Function implementation
+  
+tests({
+  '': function() {
+    fail();
+  }
+
+});
+
+</script>
