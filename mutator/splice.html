@@ -93,15 +93,21 @@ function splice(array, start, deleteCount) {
 
   // delete section
   if (deleteCount > 0) {
+    var deleteArrayIndex = 0;
     var deleteIndexCounter = 0;
     // traverse array for removal of elements from index=start
     for (var i = start; i < length; i++) {
       if (deleteIndexCounter < deleteCount) {
-        deleteArray.push(array[i]);
-        delete array[i];
+        if (i in array) {
+          deleteArray[deleteArrayIndex] = array[i];
+          delete array[i];
+        }
       }
+      deleteArrayIndex++;
       deleteIndexCounter++;
     }
+    // correct deleteArray length
+    deleteArray.length = deleteCount;
   }
 
   // insert section
