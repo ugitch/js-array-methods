@@ -2,7 +2,14 @@
 <script>
 
 // Prototype implementation
-
+// function splice(array, start, deleteCount=array.length-start) {
+//   // 1. set start value
+//   // 2. traverse array from start
+//     // 3a. remove elements if deleteCount>0
+//      // and/or
+//     // 3b. add elements if any elemToAdd
+//   // 4. return an array with deleted elements
+// }
 
 // Function signature
   // splice(array, start[, deleteCount=array.length-start[, elemToAddN]])
@@ -17,21 +24,28 @@
   // an array containing deleted elements. 
 
 // Function description
-  // splice() removes or replaces existing array elements and/or adds new elements.
+  // splice() removes existing array elements and/or adds new elements.
   
 // Requirements
-
   // If start > array.length, start = array.length.
   // If start < 0, start = start + array.length.
-  // If start < 0 and  start + array.length < 0, set start to 0.
+  // If start < 0 and start + array.length < 0, set start to 0.
+  // If start === array.length, no elements are removed.
 
+  // If deleteCount > 0, deleteCount elements are removed from index 'start'.
+  // If deleteCount <= 0, no elements are removed.
   // If no deleteCount, deleteCount = array.length - start.
-  // If deleteCount <= 0, no action.
+  // If start + deleteCount > array.length, set deleteCount = array.length - start.
 
-  // If numberOfElementsToInsert !== numberOfElementsToRemove, array.length is modified.
+  // It should insert (arguments.length - 3) elements starting with index = start.
+  // It should preserve elements in array starting with index = start + deleteCount.
+
+  // If number of elemToAdd === deleteCount, array.length stays same.
+  // If number of elemToAdd !== deleteCount, array.length is modified.
 
   // It should return an array.
-  // It should return an array containing deleted elements.
+  // It should return an array with deleted elements.
+  
   // It should work for array-like objects.
   // It should not treat holes in the array any differently.
 
@@ -40,11 +54,208 @@
   // If first argument is not an array-like object, return an empty array.
 
 // Function implementation
-  
-tests({
-  '': function() {
-    fail();
+function splice(array, start, deleteCount) {
+  // throw TypeError if no arguments
+  var length = array.length;
+  var deleteArray = [];
+  var newElements = 0;
+
+
+  // if string is first argument, throw TypeError
+  if (typeof array === 'string') {
+    throw new TypeError(`Cannot assign to read only property 'length' of ${Object.prototype.toString.call(array)}`);
   }
+
+  // set start value
+  if (start > length) {
+    start = length;
+  } 
+  else if (start < 0) {
+    start + length < 0 ? start = 0 : start += length;
+  }
+
+  // if no deleteCount or too big deleteCount
+  if (deleteCount === undefined || start + deleteCount > length) {
+    deleteCount = length - start;
+  }
+
+  // save section of array after insertion/deleting elements
+  var startIndexSafeSection = start + deleteCount
+  var safeSection = [];
+  for (var i = startIndexSafeSection; i < array.length; i++) {
+    safeSection.push(array[i]);
+  }
+
+  // delete section
+  if (deleteCount > 0) {
+    var deleteIndexCounter = 0;
+    // traverse array for removal of elements from index=start
+    for (var i = start; i < length; i++) {
+      if (deleteIndexCounter < deleteCount) {
+        deleteArray.push(array[i]);
+        delete array[i];
+      }
+      deleteIndexCounter++;
+    }
+  }
+
+  // insert section
+  // if there are elemToAdd(s)
+  if (arguments.length > 3) {
+    // number of elemToAdd(s)
+    newElements = arguments.length - 3;
+    var firstElemToAddIndex = 3;
+    var insertIndex = start;
+    // traversing arguments representing elemToAdd(s)
+    for (var i = firstElemToAddIndex; i < arguments.length; i++) {
+      array[insertIndex] = arguments[i];
+      insertIndex++;
+    }
+  }
+
+  // copy back safe section
+  if (safeSection.length > 0) {
+    var newStartingIndexSafeSection = start + newElements;
+    for (var i = 0; i < safeSection.length; i++) {
+      array[newStartingIndexSafeSection] = safeSection[i];
+      newStartingIndexSafeSection++;
+    }
+  }
+
+  // correct length of array
+  if (length - deleteCount + newElements < array.length) {
+    array.length = length - deleteCount + newElements;
+  }
+
+  // return an array with deleted elements
+  return deleteArray;
+}
+
+tests({
+  'If start > array.length, start = array.length.': function() {
+    var array = [1, 2];
+    splice(array, 3);
+    eq(array[0], 1);
+    eq(array[1], 2);
+    eq(array.length, 2);
+  },
+  'If start < 0, start = start + array.length.': function() {
+    var array = [1, 2, 3];
+    splice(array, -2);
+    eq(array[0], 1);
+    eq(array.length, 1);
+  },
+  'If start < 0 and start + array.length < 0, set start to 0.': function() {
+    var array = [1, 2, 3];
+    splice(array, -4);
+    eq(array.length, 0)
+  },
+  'If start === array.length, no elements are removed.': function() {
+    var array = ['one', 'two', 'three'];
+    splice(array, 3, 1);
+    eq(array.length, 3);
+    eq(array[0], 'one');
+    eq(array[1], 'two');
+    eq(array[2], 'three');
+  },
+
+  'If deleteCount > 0, deleteCount elements are removed from index "start".': function() {
+    var array = ['one', 'two', 'three'];
+    splice(array, 1, 2);
+    eq(array.length, 1);
+  },
+  'If deleteCount <= 0, no elements are removed.': function() {
+    var array = ['one', 'two', 'three'];
+    splice(array, 1, 0);
+    eq(array.length, 3);
+  },
+  'If no deleteCount, deleteCount = array.length - start.': function() {
+    var array = ['one', 'two', 'three'];
+    splice(array, 1);
+    eq(array[0], 'one');
+    eq(array.length, 1);
+  },
+  'If start + deleteCount > array.length, set deleteCount = array.length - start.': function() {
+    var array = ['one', 'two', 'three'];
+    splice(array, 2, 2);
+    eq(array[0], 'one');
+    eq(array[1], 'two');
+    eq(array.length, 2);
+  },
+
+  'It should insert (arguments.length - 3) elements starting with index = start.': function() {
+    var array = ['one', 'two', 'four'];
+    splice(array, 2, 0, 'three');
+    eq(array[2], 'three');
+    eq(array.length, 4);
+  },
+  'It should preserve elements in array starting with index = start + deleteCount.': function() {
+    var array = ['one', 'three', 'four'];
+    splice(array, 1, 0, 'two');
+    eq(array[2], 'three');
+    eq(array[3], 'four');
+    eq(array.length, 4);
+  },
+
+  'If number of elemToAdd === deleteCount, array.length stays same.': function() {
+    var array = ['one', 'three', 'four'];
+    splice(array, 0, 1, 'two');
+    eq(array[0], 'two');
+    eq(array.length, 3);
+  },
+  'If number of elemToAdd !== deleteCount, array.length is modified.': function() {
+    var array = ['one', 'two', 'five'];
+    splice(array, 2, 1, 'three', 'four');
+    eq(array[2], 'three');
+    eq(array[3], 'four');
+    eq(array.length, 4);
+  },
+  
+  'It should return an array.': function() {
+    var array = ['one', 'two', 'three'];
+    var spliced = splice(array, 0);
+    eq(Array.isArray(spliced), true);
+  },
+  'It should return an array with deleted elements.': function() {
+    var array = ['one', 'two', 'three'];
+    var spliced = splice(array, 0, 2);
+    eq(spliced[0], 'one');
+    eq(spliced[1], 'two');
+  },
+
+  'It should work for array-like objects.': function() {
+    var arrayLike = {0: 'ab', 1: true, length: 2};
+    splice(arrayLike, 1);
+    eq(arrayLike[0], 'ab');
+    eq(arrayLike.length, 1);
+  },
+  'It should not treat holes in the array any differently.': function() {
+    fail();
+  },
+
+  'If no arguments, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      splice();
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is a string, it should throw TypeError.': function() {
+    var isTypeError = false;
+    try {
+      splice('vacation', 0);
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
+  },
+  'If first argument is not an array-like object, return an empty array.': function() {
+    var spliced = splice(2);
+    eq(Array.isArray(spliced), true);
+    eq(spliced.length, 0);
+  },
 
 });
 
