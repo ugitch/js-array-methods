@@ -60,7 +60,6 @@ function splice(array, start, deleteCount) {
   var deleteArray = [];
   var newElements = 0;
 
-
   // if string is first argument, throw TypeError
   if (typeof array === 'string') {
     throw new TypeError(`Cannot assign to read only property 'length' of ${Object.prototype.toString.call(array)}`);
@@ -80,11 +79,17 @@ function splice(array, start, deleteCount) {
   }
 
   // save section of array after insertion/deleting elements
-  var startIndexSafeSection = start + deleteCount
+  var startIndexSafeSection = start + deleteCount;
   var safeSection = [];
+  var safeSectionIndex = 0;
   for (var i = startIndexSafeSection; i < array.length; i++) {
-    safeSection.push(array[i]);
+    if (i in array) {
+      safeSection[safeSectionIndex] = array[i];
+    }
+    safeSectionIndex++;
   }
+  // correct length if hole(s) are on the end of array
+  safeSection.length = length - startIndexSafeSection;
 
   // delete section
   if (deleteCount > 0) {
@@ -230,7 +235,13 @@ tests({
     eq(arrayLike.length, 1);
   },
   'It should not treat holes in the array any differently.': function() {
-    fail();
+    var array = ['one',, 'three'];
+    var spliced = splice(array, 1, 2);
+    eq(0 in spliced, false);
+    eq(spliced[1], 'three');
+    eq(spliced.length, 2);
+    eq(array[0], 'one');
+    eq(array.length, 1);
   },
 
   'If no arguments, it should throw TypeError.': function() {
