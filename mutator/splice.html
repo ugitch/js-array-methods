@@ -64,6 +64,10 @@ function splice(array, start, deleteCount) {
   if (typeof array === 'string') {
     throw new TypeError(`Cannot assign to read only property 'length' of ${Object.prototype.toString.call(array)}`);
   }
+  // if array is not an object, return immmediately
+  else if (typeof array !== 'object') {
+    return deleteArray;
+  }
 
   // set start value
   if (start > length) {
@@ -278,8 +282,7 @@ tests({
     var spliced = splice(2);
     eq(Array.isArray(spliced), true);
     eq(spliced.length, 0);
-  },
-
+  }
 });
 
 </script>
