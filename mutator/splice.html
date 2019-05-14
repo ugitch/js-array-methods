@@ -128,7 +128,13 @@ function splice(array, start, deleteCount) {
   if (safeSection.length > 0) {
     var newStartingIndexSafeSection = start + newElements;
     for (var i = 0; i < safeSection.length; i++) {
-      array[newStartingIndexSafeSection] = safeSection[i];
+      if (i in safeSection) {
+        array[newStartingIndexSafeSection] = safeSection[i];
+      }
+      else {
+        // setting hole in the array
+        delete array[newStartingIndexSafeSection];
+      }
       newStartingIndexSafeSection++;
     }
   }
